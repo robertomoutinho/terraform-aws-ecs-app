@@ -38,6 +38,10 @@ module "alb_http_sg" {
 
 }
 
+#########
+## App ##
+#########
+
 module "app_sg" {
 
   source  = "terraform-aws-modules/security-group/aws"
@@ -54,6 +58,13 @@ module "app_sg" {
       protocol                 = "tcp"
       description              = "app"
       source_security_group_id = module.alb_https_sg.this_security_group_id
+    },
+    {
+      from_port                = var.app_port
+      to_port                  = var.app_port
+      protocol                 = "tcp"
+      description              = "app"
+      source_security_group_id = module.alb_http_sg.this_security_group_id
     },
   ]
 

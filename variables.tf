@@ -70,6 +70,42 @@ variable "alb_logging_enabled" {
   default     = false
 }
 
+variable "health_check_interval" {
+  description = "Healthcheck interval"
+  type        = number
+  default     = 15
+}
+
+variable "health_check_path" {
+  description = "Healthcheck interval"
+  type        = string
+  default     = "/"
+}
+
+variable "health_check_healthy_threshold" {
+  description = "Healthcheck interval"
+  type        = number
+  default     = 3
+}
+
+variable "health_check_unhealthy_threshold" {
+  description = "Healthcheck interval"
+  type        = number
+  default     = 4
+}
+
+variable "health_check_timeout" {
+  description = "Healthcheck interval"
+  type        = number
+  default     = 5
+}
+
+variable "health_check_http_code_matcher" {
+  description = "Healthcheck interval"
+  type        = string
+  default     = "200-399"
+}
+
 # ACM
 variable "certificate_arn" {
   description = "ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS"

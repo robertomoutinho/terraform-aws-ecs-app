@@ -49,6 +49,17 @@ module "alb" {
       backend_port         = var.app_port
       target_type          = "ip"
       deregistration_delay = 10
+      health_check = {
+        enabled             = true
+        interval            = var.health_check_interval
+        path                = var.health_check_path
+        port                = "traffic-port"
+        healthy_threshold   = var.health_check_healthy_threshold
+        unhealthy_threshold = var.health_check_unhealthy_threshold
+        timeout             = var.health_check_timeout
+        protocol            = "HTTP"
+        matcher             = var.health_check_http_code_matcher
+      }
     },
   ]
 
