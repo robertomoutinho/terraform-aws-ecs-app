@@ -53,7 +53,7 @@ module "alb" {
         enabled             = true
         interval            = var.health_check_interval
         path                = var.health_check_path
-        port                = "traffic-port"
+        port                = var.app_port
         healthy_threshold   = var.health_check_healthy_threshold
         unhealthy_threshold = var.health_check_unhealthy_threshold
         timeout             = var.health_check_timeout
