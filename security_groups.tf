@@ -51,6 +51,12 @@ module "app_sg" {
   vpc_id      = var.vpc_id
   description = "Security group with open port for app (${var.app_port}) from ALB, egress ports are all world open"
 
+  ingress_with_self = [
+    {
+      rule = "all-all"
+    },
+  ]
+
   ingress_with_source_security_group_id = [
     {
       from_port                = var.app_port
