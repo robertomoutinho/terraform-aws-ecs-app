@@ -16,7 +16,9 @@ module "alb_https_sg" {
       cidr_blocks = var.alb_ingress_cidr_blocks
     },
   ]
-  tags = local.local_tags
+
+  egress_rules = ["all-all"]
+  tags         = local.local_tags
 
 }
 
@@ -34,7 +36,9 @@ module "alb_http_sg" {
       cidr_blocks = var.alb_ingress_cidr_blocks
     },
   ]
-  tags = local.local_tags
+
+  egress_rules = ["all-all"]
+  tags         = local.local_tags
 
 }
 
@@ -49,7 +53,7 @@ module "app_sg" {
 
   name        = var.name
   vpc_id      = var.vpc_id
-  description = "Security group with open port for app (${var.app_port}) from ALB, egress ports are all world open"
+  description = "Security group with open port (${var.app_port}) from ALB, egress ports are all world open"
 
   ingress_with_self = [
     {
@@ -62,20 +66,19 @@ module "app_sg" {
       from_port                = var.app_port
       to_port                  = var.app_port
       protocol                 = "tcp"
-      description              = "app"
+      description              = "Ingress from Load Balancer SG"
       source_security_group_id = module.alb_https_sg.this_security_group_id
     },
     {
       from_port                = var.app_port
       to_port                  = var.app_port
       protocol                 = "tcp"
-      description              = "app"
+      description              = "Ingress from Load Balancer SG"
       source_security_group_id = module.alb_http_sg.this_security_group_id
     },
   ]
 
   egress_rules = ["all-all"]
-
-  tags = local.local_tags
+  tags         = local.local_tags
 
 }
