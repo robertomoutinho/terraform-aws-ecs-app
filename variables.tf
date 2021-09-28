@@ -106,6 +106,61 @@ variable "health_check_http_code_matcher" {
   default     = "200-399"
 }
 
+# AutoScaling Group
+variable "enable_asg" {
+  description = "If autoscaling should be enabled"
+  type        = bool
+  default     = false
+}
+
+variable "asg_max_tasks" {
+  description = "The amount of maximum tasks"
+  type        = number
+  default     = 3
+}
+
+variable "asg_min_tasks" {
+  description = "The amount of minimum tasks"
+  type        = number
+  default     = 1
+}
+
+variable "asg_evaluation_periods" {
+  description = "The number of periods over which data is compared to the specified threshold."
+  type        = number
+  default     = 5
+}
+
+variable "asg_period" {
+  description = "The period in seconds over which the specified statistic is applied"
+  type        = number
+  default     = 60
+}
+
+variable "asg_threshold_cpu_to_scale_up" {
+  description = "The value against which the specified statistic is compared."
+  type        = number
+  default     = 60
+}
+
+variable "asg_threshold_cpu_to_scale_down" {
+  description = "The value against which the specified statistic is compared."
+  type        = number
+  default     = 40
+}
+
+variable "asg_cooldown_to_scale_up_again" {
+  description = "The amount of time, in seconds, after a scaling activity completes and before the next scaling up activity can start."
+  type        = number
+  default     = 60
+}
+
+variable "asg_cooldown_to_scale_down_again" {
+  description = "The amount of time, in seconds, after a scaling activity completes and before the next scaling down activity can start."
+  type        = number
+  default     = 300
+}
+
 # ACM
 variable "certificate_arn" {
   description = "ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS"

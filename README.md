@@ -39,7 +39,12 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 
 | Name | Type |
 |------|------|
+| [aws_appautoscaling_policy.down](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
+| [aws_appautoscaling_policy.up](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
+| [aws_appautoscaling_target.target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_target) | resource |
 | [aws_cloudwatch_log_group.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
+| [aws_cloudwatch_metric_alarm.service_cpu_high](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.service_cpu_low](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_ecs_service.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service) | resource |
 | [aws_ecs_task_definition.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition) | resource |
 | [aws_iam_role.ecs_task_execution](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
@@ -66,6 +71,14 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_app_fqdn"></a> [app\_fqdn](#input\_app\_fqdn) | FQDN of app to use. Set this only to override Route53 and ALB's DNS name. | `string` | `null` | no |
 | <a name="input_app_image"></a> [app\_image](#input\_app\_image) | Docker image to run app with. If not specified, official app image will be used | `string` | `""` | no |
 | <a name="input_app_port"></a> [app\_port](#input\_app\_port) | Local port app should be running on. Default value is most likely fine. | `number` | `4141` | no |
+| <a name="input_asg_cooldown_to_scale_down_again"></a> [asg\_cooldown\_to\_scale\_down\_again](#input\_asg\_cooldown\_to\_scale\_down\_again) | The amount of time, in seconds, after a scaling activity completes and before the next scaling down activity can start. | `number` | `300` | no |
+| <a name="input_asg_cooldown_to_scale_up_again"></a> [asg\_cooldown\_to\_scale\_up\_again](#input\_asg\_cooldown\_to\_scale\_up\_again) | The amount of time, in seconds, after a scaling activity completes and before the next scaling up activity can start. | `number` | `60` | no |
+| <a name="input_asg_evaluation_periods"></a> [asg\_evaluation\_periods](#input\_asg\_evaluation\_periods) | The number of periods over which data is compared to the specified threshold. | `number` | `5` | no |
+| <a name="input_asg_max_tasks"></a> [asg\_max\_tasks](#input\_asg\_max\_tasks) | The amount of maximum tasks | `number` | `3` | no |
+| <a name="input_asg_min_tasks"></a> [asg\_min\_tasks](#input\_asg\_min\_tasks) | The amount of minimum tasks | `number` | `1` | no |
+| <a name="input_asg_period"></a> [asg\_period](#input\_asg\_period) | The period in seconds over which the specified statistic is applied | `number` | `60` | no |
+| <a name="input_asg_threshold_cpu_to_scale_down"></a> [asg\_threshold\_cpu\_to\_scale\_down](#input\_asg\_threshold\_cpu\_to\_scale\_down) | The value against which the specified statistic is compared. | `number` | `40` | no |
+| <a name="input_asg_threshold_cpu_to_scale_up"></a> [asg\_threshold\_cpu\_to\_scale\_up](#input\_asg\_threshold\_cpu\_to\_scale\_up) | The value against which the specified statistic is compared. | `number` | `60` | no |
 | <a name="input_certificate_arn"></a> [certificate\_arn](#input\_certificate\_arn) | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | `string` | n/a | yes |
 | <a name="input_cloudwatch_log_retention_in_days"></a> [cloudwatch\_log\_retention\_in\_days](#input\_cloudwatch\_log\_retention\_in\_days) | Retention period of app CloudWatch logs | `number` | `7` | no |
 | <a name="input_container_memory_reservation"></a> [container\_memory\_reservation](#input\_container\_memory\_reservation) | The amount of memory (in MiB) to reserve for the container | `number` | `128` | no |
@@ -80,6 +93,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_ecs_service_desired_count"></a> [ecs\_service\_desired\_count](#input\_ecs\_service\_desired\_count) | The number of instances of the task definition to place and keep running | `number` | `1` | no |
 | <a name="input_ecs_task_cpu"></a> [ecs\_task\_cpu](#input\_ecs\_task\_cpu) | The number of cpu units used by the task | `number` | `256` | no |
 | <a name="input_ecs_task_memory"></a> [ecs\_task\_memory](#input\_ecs\_task\_memory) | The amount (in MiB) of memory used by the task | `number` | `512` | no |
+| <a name="input_enable_asg"></a> [enable\_asg](#input\_enable\_asg) | If autoscaling should be enabled | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment | `string` | n/a | yes |
 | <a name="input_health_check_healthy_threshold"></a> [health\_check\_healthy\_threshold](#input\_health\_check\_healthy\_threshold) | Healthcheck interval | `number` | `3` | no |
 | <a name="input_health_check_http_code_matcher"></a> [health\_check\_http\_code\_matcher](#input\_health\_check\_http\_code\_matcher) | Healthcheck interval | `string` | `"200-399"` | no |
