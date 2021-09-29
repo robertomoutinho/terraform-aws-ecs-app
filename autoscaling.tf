@@ -5,6 +5,10 @@ resource "aws_appautoscaling_target" "target" {
   scalable_dimension = "ecs:service:DesiredCount"
   min_capacity       = var.asg_min_tasks
   max_capacity       = var.asg_max_tasks
+  role_arn = format(
+    "arn:aws:iam::%s:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService",
+    data.aws_caller_identity.current.account_id,
+  )
 }
 
 ############################
@@ -14,11 +18,11 @@ resource "aws_appautoscaling_target" "target" {
 resource "aws_appautoscaling_policy" "auto_scaling" {
 
   count              = var.enable_asg ? 1 : 0
-  name               = "${var.environment}-${var.name}-scale-up"
-  service_namespace  = "ecs"
-  resource_id        = "service/${var.ecs_cluster_id}/${aws_ecs_service.app.name}"
-  scalable_dimension = "ecs:service:DesiredCount"
+  name               = "${var.environment}-${var.name}-cpu-scale"
   policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.target[0].resource_id
+  service_namespace  = aws_appautoscaling_target.target[0].service_namespace
+  scalable_dimension = aws_appautoscaling_target.target[0].scalable_dimension
 
   target_tracking_scaling_policy_configuration {
     target_value       = var.asg_threshold_cpu_to_scale_up
