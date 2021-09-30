@@ -67,7 +67,7 @@ module "container_definition" {
 
 resource "aws_ecs_task_definition" "app" {
 
-  family                   = var.name
+  family                   = "${var.environment}-${var.name}"
   execution_role_arn       = aws_iam_role.ecs_task_execution.arn
   task_role_arn            = aws_iam_role.ecs_task_execution.arn
   network_mode             = "awsvpc"
@@ -80,7 +80,6 @@ resource "aws_ecs_task_definition" "app" {
 }
 
 data "aws_ecs_task_definition" "app" {
-  task_definition = var.name
-
-  depends_on = [aws_ecs_task_definition.app]
+  task_definition = "${var.environment}-${var.name}"
+  depends_on      = [aws_ecs_task_definition.app]
 }
