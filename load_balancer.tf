@@ -6,7 +6,7 @@ module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "v5.13.0"
 
-  name     = var.name
+  name     = "${var.environment}-${var.name}"
   internal = var.internal
 
   vpc_id          = var.vpc_id
@@ -44,7 +44,7 @@ module "alb" {
 
   target_groups = [
     {
-      name                 = var.name
+      name                 = "${var.environment}-${var.name}"
       backend_protocol     = "HTTP"
       backend_port         = var.app_port
       target_type          = "ip"

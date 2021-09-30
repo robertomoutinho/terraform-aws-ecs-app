@@ -7,7 +7,7 @@ module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "v3.18.0"
 
-  name        = "${var.name}-alb-https"
+  name        = "${var.environment}-${var.name}-alb-https"
   vpc_id      = var.vpc_id
   description = "Security group with HTTPS ports open"
   ingress_with_cidr_blocks = [
@@ -27,7 +27,7 @@ module "alb_http_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "v3.18.0"
 
-  name        = "${var.name}-alb-http"
+  name        = "${var.environment}-${var.name}-alb-http"
   vpc_id      = var.vpc_id
   description = "Security group with HTTP ports open"
   ingress_with_cidr_blocks = [
@@ -51,7 +51,7 @@ module "app_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "v3.18.0"
 
-  name        = var.name
+  name        = "${var.environment}-${var.name}"
   vpc_id      = var.vpc_id
   description = "Security group with open port (${var.app_port}) from ALB, egress ports are all world open"
 
