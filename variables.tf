@@ -291,3 +291,40 @@ variable "lb_extra_security_group_ids" {
   type        = list(string)
   default     = []
 }
+
+## Service discovery
+variable "enable_service_discovery" {
+  description = "Whether the service should be registered with Service Discovery. In order to use Service Disovery, an existing DNS Namespace must exist and be passed in."
+  type        = bool
+  default     = false
+}
+
+variable "service_discovery_namespace_id" {
+  description = "The ID of the namespace to use for DNS configuration."
+  type        = string
+  default     = null
+}
+
+variable "service_discovery_dns_record_type" {
+  description = "The type of the resource, which indicates the value that Amazon Route 53 returns in response to DNS queries. One of `A` or `SRV`."
+  type        = string
+  default     = "A"
+}
+
+variable "service_discovery_dns_ttl" {
+  description = "The amount of time, in seconds, that you want DNS resolvers to cache the settings for this resource record set."
+  type        = number
+  default     = 10
+}
+
+variable "service_discovery_routing_policy" {
+  description = "The routing policy that you want to apply to all records that Route 53 creates when you register an instance and specify the service. One of `MULTIVALUE` or `WEIGHTED`."
+  type        = string
+  default     = "MULTIVALUE"
+}
+
+variable "service_discovery_failure_threshold" {
+  description = "The number of 30-second intervals that you want service discovery to wait before it changes the health status of a service instance. Maximum value of 10."
+  type        = number
+  default     = 1
+}

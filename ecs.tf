@@ -16,6 +16,16 @@ resource "aws_ecs_service" "app" {
   deployment_maximum_percent         = var.ecs_service_deployment_maximum_percent
   deployment_minimum_healthy_percent = var.ecs_service_deployment_minimum_healthy_percent
 
+  dynamic "service_registries" {
+    for_each = aws_service_discovery_service.sds
+    content {
+      registry_arn   = service_registries.value.arn
+      port           = var.task_network_mode == "awsvpc" ? var.app_port : null
+      container_name = "${var.environment}-${var.name}"
+      container_port = var.app_port
+    }
+  }
+
   network_configuration {
     subnets          = var.private_subnet_ids
     security_groups  = [module.app_sg.this_security_group_id]
