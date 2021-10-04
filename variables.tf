@@ -292,6 +292,12 @@ variable "lb_extra_security_group_ids" {
   default     = []
 }
 
+variable "get_app_version_role_arn" {
+  description = "The Role ARN to be used on the get app version module"
+  type        = string
+  default     = ""
+}
+
 ## Service discovery
 variable "enable_service_discovery" {
   description = "Whether the service should be registered with Service Discovery. In order to use Service Disovery, an existing DNS Namespace must exist and be passed in."
