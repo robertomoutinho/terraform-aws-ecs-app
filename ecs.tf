@@ -1,5 +1,17 @@
 locals {
-  app_image = module.app_version.image_tag
+  task_definition_family_name   = "${var.environment}-${var.name}"
+  container_name                = var.name
+  generated_task_definition_arn = "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:task-definition/${local.task_definition_family_name}:${data.aws_ecs_task_definition.app.revision}"
+  docker_image                  = data.aws_ecs_container_definition.app.image
+}
+
+data "aws_ecs_task_definition" "app" {
+  task_definition = local.task_definition_family_name
+}
+
+data "aws_ecs_container_definition" "app" {
+  task_definition = local.generated_task_definition_arn
+  container_name  = local.container_name
 }
 
 #########
@@ -25,7 +37,7 @@ resource "aws_ecs_service" "app" {
     content {
       registry_arn   = service_registries.value.arn
       port           = var.task_network_mode == "awsvpc" ? var.app_port : null
-      container_name = "${var.environment}-${var.name}"
+      container_name = local.container_name
       container_port = var.app_port
     }
   }
@@ -37,7 +49,7 @@ resource "aws_ecs_service" "app" {
   }
 
   load_balancer {
-    container_name   = var.name
+    container_name   = local.container_name
     container_port   = var.app_port
     target_group_arn = element(module.alb.target_group_arns, 0)
   }
@@ -49,8 +61,8 @@ module "container_definition" {
   source  = "cloudposse/ecs-container-definition/aws"
   version = "v0.58.1"
 
-  container_name  = var.name
-  container_image = local.app_image
+  container_name  = local.container_name
+  container_image = local.docker_image
 
   container_cpu                = var.ecs_task_cpu
   container_memory             = var.ecs_task_memory
@@ -81,7 +93,7 @@ module "container_definition" {
 
 resource "aws_ecs_task_definition" "app" {
 
-  family                   = "${var.environment}-${var.name}"
+  family                   = local.task_definition_family_name
   execution_role_arn       = aws_iam_role.ecs_task_execution.arn
   task_role_arn            = aws_iam_role.ecs_task_execution.arn
   network_mode             = "awsvpc"
@@ -91,9 +103,4 @@ resource "aws_ecs_task_definition" "app" {
   container_definitions    = module.container_definition.json_map_encoded_list
 
   tags = local.local_tags
-}
-
-data "aws_ecs_task_definition" "app" {
-  task_definition = "${var.environment}-${var.name}"
-  depends_on      = [aws_ecs_task_definition.app]
 }

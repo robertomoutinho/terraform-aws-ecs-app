@@ -33,7 +33,6 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="module_alb_http_sg"></a> [alb\_http\_sg](#module\_alb\_http\_sg) | terraform-aws-modules/security-group/aws | v3.18.0 |
 | <a name="module_alb_https_sg"></a> [alb\_https\_sg](#module\_alb\_https\_sg) | terraform-aws-modules/security-group/aws | v3.18.0 |
 | <a name="module_app_sg"></a> [app\_sg](#module\_app\_sg) | terraform-aws-modules/security-group/aws | v3.18.0 |
-| <a name="module_app_version"></a> [app\_version](#module\_app\_version) | git@github.com:robertomoutinho/tf-aws-ecs-service-version?ref=v0.0.1 |  |
 | <a name="module_container_definition"></a> [container\_definition](#module\_container\_definition) | cloudposse/ecs-container-definition/aws | v0.58.1 |
 
 ## Resources
@@ -52,6 +51,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | [aws_route53_record.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_service_discovery_service.sds](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/service_discovery_service) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_ecs_container_definition.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ecs_container_definition) | data source |
 | [aws_ecs_task_definition.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ecs_task_definition) | data source |
 | [aws_iam_policy_document.ecs_task_access_backend](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.ecs_task_access_secrets](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
