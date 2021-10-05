@@ -1,11 +1,18 @@
+locals {
+  app_image = module.app_version.image_tag
+}
+
 #########
 ## ECS ##
 #########
 
 resource "aws_ecs_service" "app" {
-  name                               = var.name
-  cluster                            = var.ecs_cluster_id
-  task_definition                    = "${data.aws_ecs_task_definition.app.family}:${module.app_version.image_tag}"
+  name    = var.name
+  cluster = var.ecs_cluster_id
+  task_definition = "${data.aws_ecs_task_definition.app.family}:${max(
+    aws_ecs_task_definition.app.revision,
+    data.aws_ecs_task_definition.app.revision,
+  )}"
   desired_count                      = var.ecs_service_desired_count
   launch_type                        = "FARGATE"
   propagate_tags                     = "SERVICE"
