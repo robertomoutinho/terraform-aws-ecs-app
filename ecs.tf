@@ -2,7 +2,7 @@ locals {
   task_definition_family_name   = "${var.environment}-${var.name}"
   container_name                = var.name
   generated_task_definition_arn = "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:task-definition/${local.task_definition_family_name}:${data.aws_ecs_task_definition.app.revision}"
-  docker_image                  = data.aws_ecs_container_definition.app.image
+  docker_image                  = data.aws_ecs_container_definition.app.image == "" ? "nginx:latest" : data.aws_ecs_container_definition.app.image
 }
 
 data "aws_ecs_task_definition" "app" {
@@ -36,9 +36,7 @@ resource "aws_ecs_service" "app" {
     for_each = aws_service_discovery_service.sds
     content {
       registry_arn   = service_registries.value.arn
-      port           = var.task_network_mode == "awsvpc" ? var.app_port : null
       container_name = local.container_name
-      container_port = var.app_port
     }
   }
 

@@ -252,12 +252,6 @@ variable "custom_container_definitions" {
 }
 
 # app
-variable "app_image" {
-  description = "Docker image to run app with. If not specified, official app image will be used"
-  type        = string
-  default     = ""
-}
-
 variable "app_port" {
   description = "Local port app should be running on. Default value is most likely fine."
   type        = number
