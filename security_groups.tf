@@ -1,3 +1,7 @@
+data "aws_vpc" "selected" {
+  id = var.vpc_id
+}
+
 #####################
 ## Security groups ##
 #####################
@@ -58,6 +62,16 @@ module "app_sg" {
   ingress_with_self = [
     {
       rule = "all-all"
+    },
+  ]
+
+  ingress_with_cidr_blocks = [
+    {
+      from_port   = var.app_port
+      to_port     = var.app_port
+      protocol    = "tcp"
+      description = "Service Discovery"
+      cidr_blocks = data.aws_vpc.selected.cidr_block
     },
   ]
 

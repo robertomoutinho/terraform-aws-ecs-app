@@ -19,4 +19,6 @@ resource "aws_service_discovery_service" "sds" {
     failure_threshold = var.service_discovery_failure_threshold
   }
 
+  tags = local.local_tags
+
 }
