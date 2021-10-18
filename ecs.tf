@@ -10,7 +10,7 @@ data "external" "current_image" {
   program = ["bash", "${path.module}/scripts/app_image_version.sh"]
   query = {
     service    = local.ecs_service_name
-    cluster    = var.environment
+    cluster    = var.ecs_cluster_id
     path_root  = jsonencode(path.root)
     account_id = data.aws_caller_identity.current.account_id
     region     = data.aws_region.current.name
