@@ -1,4 +1,4 @@
-# AWS Terraform module which runs app on AWS Fargate
+# AWS Terraform module which runs an web app on AWS Fargate
 
 This repository contains Terraform infrastructure code which creates AWS resources required to run an web app on AWS, including:
 
@@ -8,7 +8,6 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 - AWS Service Discovery
 - AWS IAM necessary to access other AWS resources (such as S3, SNS and etc)
 - AWS Cloudwatch for the logs
-- 
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
