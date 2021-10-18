@@ -1,15 +1,14 @@
 # AWS Terraform module which runs app on AWS Fargate
 
-[app](https://www.runapp.io/) is tool which provides unified workflow for collaborating on Terraform through GitHub, GitLab and Bitbucket Cloud.
+This repository contains Terraform infrastructure code which creates AWS resources required to run an web app on AWS, including:
 
-This repository contains Terraform infrastructure code which creates AWS resources required to run [app](https://www.runapp.io/) on AWS, including:
-
-- Application Load Balancer (ALB)
-- Domain name using AWS Route53 which points to ALB
-- [AWS Elastic Cloud Service (ECS)](https://aws.amazon.com/ecs/) and [AWS Fargate](https://aws.amazon.com/fargate/) running app Docker image
-- AWS Parameter Store to keep secrets and access them in ECS task natively
-
-[AWS Fargate](https://aws.amazon.com/fargate/)
+- AWS Application Load Balancer (ALB)
+- AWS Route53 domain name pointing to ALB
+- [AWS Elastic Cloud Service (ECS)](https://aws.amazon.com/ecs/) task running on [AWS Fargate](https://aws.amazon.com/fargate/) (with the provided docker image)
+- AWS Service Discovery
+- AWS IAM necessary to access other AWS resources (such as S3, SNS and etc)
+- AWS Cloudwatch for the logs
+- 
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
