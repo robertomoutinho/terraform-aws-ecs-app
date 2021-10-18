@@ -1,19 +1,21 @@
 locals {
-  task_definition_family_name   = "${var.environment}-${var.name}"
-  container_name                = var.name
-  generated_task_definition_arn = "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:task-definition/${local.task_definition_family_name}:${var.ecs_first_run ? "0" : data.aws_ecs_task_definition.app[0].revision}"
-  docker_image                  = var.ecs_first_run ? "nginx:latest" : data.aws_ecs_container_definition.app[0].image
+  ecs_service_name                = var.name
+  ecs_task_definition_family_name = "${var.environment}-${var.name}"
+  container_name                  = var.name
+  container_image                 = data.external.current_image.result["image_tag"] == "not_found" ? "nginx:latest" : "${var.app_ecr_image_repo}:${data.external.current_image.result["image_tag"]}"
+  latest_task_definition          = "${aws_ecs_task_definition.app.family}:${max(aws_ecs_task_definition.app.revision, data.external.current_image.result["task_definition_revision"])}"
 }
 
-data "aws_ecs_task_definition" "app" {
-  count           = var.ecs_first_run ? 0 : 1
-  task_definition = local.task_definition_family_name
-}
-
-data "aws_ecs_container_definition" "app" {
-  count           = var.ecs_first_run ? 0 : 1
-  task_definition = local.generated_task_definition_arn
-  container_name  = local.container_name
+data "external" "current_image" {
+  program = ["bash", "${path.module}/scripts/app_image_version.sh"]
+  query = {
+    service    = local.ecs_service_name
+    cluster    = var.environment
+    path_root  = jsonencode(path.root)
+    account_id = data.aws_caller_identity.current.account_id
+    region     = data.aws_region.current.name
+    role_arn   = var.iam_role_for_external_datasource
+  }
 }
 
 #########
@@ -21,9 +23,9 @@ data "aws_ecs_container_definition" "app" {
 #########
 
 resource "aws_ecs_service" "app" {
-  name                               = var.name
+  name                               = local.ecs_service_name
   cluster                            = var.ecs_cluster_id
-  task_definition                    = "${local.task_definition_family_name}:${var.ecs_first_run ? aws_ecs_task_definition.app.revision : max(aws_ecs_task_definition.app.revision, data.aws_ecs_task_definition.app[0].revision)}"
+  task_definition                    = "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:task-definition/${local.latest_task_definition}"
   desired_count                      = var.ecs_service_desired_count
   launch_type                        = "FARGATE"
   propagate_tags                     = "SERVICE"
@@ -59,7 +61,7 @@ module "container_definition" {
   version = "v0.58.1"
 
   container_name  = local.container_name
-  container_image = local.docker_image
+  container_image = local.container_image
 
   container_cpu                = var.ecs_task_cpu
   container_memory             = var.ecs_task_memory
@@ -90,7 +92,7 @@ module "container_definition" {
 
 resource "aws_ecs_task_definition" "app" {
 
-  family                   = local.task_definition_family_name
+  family                   = local.ecs_task_definition_family_name
   execution_role_arn       = aws_iam_role.ecs_task_execution.arn
   task_role_arn            = aws_iam_role.ecs_task_execution.arn
   network_mode             = "awsvpc"

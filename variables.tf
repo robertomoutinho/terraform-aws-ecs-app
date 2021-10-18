@@ -26,10 +26,9 @@ variable "app_fqdn" {
   default     = null
 }
 
-variable "ecs_first_run" {
-  description = "Is this the first time this module being executed ?"
-  type        = bool
-  default     = false
+variable "iam_role_for_external_datasource" {
+  description = "This Role is used to get the current app version deploy to ECS"
+  type        = string
 }
 
 # VPC
@@ -179,6 +178,12 @@ variable "certificate_arn" {
   type        = string
 }
 
+variable "lb_extra_security_group_ids" {
+  description = "List of one or more security groups to be added to the load balancer"
+  type        = list(string)
+  default     = []
+}
+
 # Route53
 variable "route53_zone_name" {
   description = "Route53 zone name to create ACM certificate in and main A-record, without trailing dot"
@@ -270,6 +275,11 @@ variable "app_port" {
   default     = 4141
 }
 
+variable "app_ecr_image_repo" {
+  description = "The ECR Repository where the app image is located"
+  type        = string
+}
+
 variable "custom_environment_secrets" {
   description = "List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`)"
   type = list(object(
@@ -290,12 +300,6 @@ variable "custom_environment_variables" {
     }
   ))
   default = []
-}
-
-variable "lb_extra_security_group_ids" {
-  description = "List of one or more security groups to be added to the load balancer"
-  type        = list(string)
-  default     = []
 }
 
 ## Service discovery

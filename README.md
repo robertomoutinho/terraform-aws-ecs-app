@@ -23,6 +23,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.36.0, < 4.0 |
+| <a name="provider_external"></a> [external](#provider\_external) | n/a |
 
 ## Modules
 
@@ -51,14 +52,13 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | [aws_route53_record.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_service_discovery_service.sds](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/service_discovery_service) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
-| [aws_ecs_container_definition.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ecs_container_definition) | data source |
-| [aws_ecs_task_definition.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ecs_task_definition) | data source |
 | [aws_iam_policy_document.ecs_task_access_backend](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.ecs_task_access_secrets](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.ecs_tasks](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [aws_route53_zone.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
 | [aws_vpc.selected](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc) | data source |
+| [external_external.current_image](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) | data source |
 
 ## Inputs
 
@@ -69,6 +69,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_alb_log_bucket_name"></a> [alb\_log\_bucket\_name](#input\_alb\_log\_bucket\_name) | S3 bucket (externally created) for storing load balancer access logs. Required if alb\_logging\_enabled is true. | `string` | `""` | no |
 | <a name="input_alb_log_location_prefix"></a> [alb\_log\_location\_prefix](#input\_alb\_log\_location\_prefix) | S3 prefix within the log\_bucket\_name under which logs are stored. | `string` | `""` | no |
 | <a name="input_alb_logging_enabled"></a> [alb\_logging\_enabled](#input\_alb\_logging\_enabled) | Controls if the ALB will log requests to S3. | `bool` | `false` | no |
+| <a name="input_app_ecr_image_repo"></a> [app\_ecr\_image\_repo](#input\_app\_ecr\_image\_repo) | The ECR Repository where the app image is located | `string` | n/a | yes |
 | <a name="input_app_fqdn"></a> [app\_fqdn](#input\_app\_fqdn) | FQDN of app to use. Set this only to override Route53 and ALB's DNS name. | `string` | `null` | no |
 | <a name="input_app_port"></a> [app\_port](#input\_app\_port) | Local port app should be running on. Default value is most likely fine. | `number` | `4141` | no |
 | <a name="input_asg_cooldown_to_scale_down_again"></a> [asg\_cooldown\_to\_scale\_down\_again](#input\_asg\_cooldown\_to\_scale\_down\_again) | The amount of time, in seconds, after a scaling activity completes and before the next scaling down activity can start. | `number` | `300` | no |
@@ -87,7 +88,6 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_custom_environment_secrets"></a> [custom\_environment\_secrets](#input\_custom\_environment\_secrets) | List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`) | <pre>list(object(<br>    {<br>      name      = string<br>      valueFrom = string<br>    }<br>  ))</pre> | `[]` | no |
 | <a name="input_custom_environment_variables"></a> [custom\_environment\_variables](#input\_custom\_environment\_variables) | List of additional environment variables the container will use (list should contain maps with `name` and `value`) | <pre>list(object(<br>    {<br>      name  = string<br>      value = string<br>    }<br>  ))</pre> | `[]` | no |
 | <a name="input_ecs_cluster_id"></a> [ecs\_cluster\_id](#input\_ecs\_cluster\_id) | The ECS cluster ID | `any` | n/a | yes |
-| <a name="input_ecs_first_run"></a> [ecs\_first\_run](#input\_ecs\_first\_run) | Is this the first time this module being executed ? | `bool` | `false` | no |
 | <a name="input_ecs_service_assign_public_ip"></a> [ecs\_service\_assign\_public\_ip](#input\_ecs\_service\_assign\_public\_ip) | Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html) | `bool` | `false` | no |
 | <a name="input_ecs_service_deployment_maximum_percent"></a> [ecs\_service\_deployment\_maximum\_percent](#input\_ecs\_service\_deployment\_maximum\_percent) | The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment | `number` | `200` | no |
 | <a name="input_ecs_service_deployment_minimum_healthy_percent"></a> [ecs\_service\_deployment\_minimum\_healthy\_percent](#input\_ecs\_service\_deployment\_minimum\_healthy\_percent) | The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment | `number` | `50` | no |
@@ -103,6 +103,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_health_check_path"></a> [health\_check\_path](#input\_health\_check\_path) | Healthcheck interval | `string` | `"/"` | no |
 | <a name="input_health_check_timeout"></a> [health\_check\_timeout](#input\_health\_check\_timeout) | Healthcheck interval | `number` | `5` | no |
 | <a name="input_health_check_unhealthy_threshold"></a> [health\_check\_unhealthy\_threshold](#input\_health\_check\_unhealthy\_threshold) | Healthcheck interval | `number` | `4` | no |
+| <a name="input_iam_role_for_external_datasource"></a> [iam\_role\_for\_external\_datasource](#input\_iam\_role\_for\_external\_datasource) | This Role is used to get the current app version deploy to ECS | `string` | n/a | yes |
 | <a name="input_internal"></a> [internal](#input\_internal) | Whether the load balancer is internal or external | `bool` | `false` | no |
 | <a name="input_lb_extra_security_group_ids"></a> [lb\_extra\_security\_group\_ids](#input\_lb\_extra\_security\_group\_ids) | List of one or more security groups to be added to the load balancer | `list(string)` | `[]` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name to use on all resources created (VPC, ALB, etc) | `string` | `"app"` | no |
