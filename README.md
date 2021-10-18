@@ -64,7 +64,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_alb_extra_acm_cert_arn"></a> [alb\_extra\_acm\_cert\_arn](#input\_alb\_extra\_acm\_cert\_arn) | The ARN of the ACM SSL certificate for the extra cert | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
+| <a name="input_alb_extra_acm_cert_arn"></a> [alb\_extra\_acm\_cert\_arn](#input\_alb\_extra\_acm\_cert\_arn) | The ARN of the ACM SSL certificate for the extra cert | `list(string)` | `[]` | no |
 | <a name="input_alb_ingress_cidr_blocks"></a> [alb\_ingress\_cidr\_blocks](#input\_alb\_ingress\_cidr\_blocks) | Comma separated string of IPv4 CIDR ranges to use on all ingress rules of the ALB. | `string` | `"0.0.0.0/0"` | no |
 | <a name="input_alb_log_bucket_name"></a> [alb\_log\_bucket\_name](#input\_alb\_log\_bucket\_name) | S3 bucket (externally created) for storing load balancer access logs. Required if alb\_logging\_enabled is true. | `string` | `""` | no |
 | <a name="input_alb_log_location_prefix"></a> [alb\_log\_location\_prefix](#input\_alb\_log\_location\_prefix) | S3 prefix within the log\_bucket\_name under which logs are stored. | `string` | `""` | no |

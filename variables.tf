@@ -79,7 +79,7 @@ variable "alb_logging_enabled" {
 variable "alb_extra_acm_cert_arn" {
   description = "The ARN of the ACM SSL certificate for the extra cert"
   type        = list(string)
-  default     = [""]
+  default     = []
 }
 
 variable "health_check_interval" {
