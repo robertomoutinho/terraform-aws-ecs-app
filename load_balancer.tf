@@ -66,3 +66,10 @@ module "alb" {
   tags = local.local_tags
 
 }
+
+## Attach extra ACM SSL certificates
+resource "aws_lb_listener_certificate" "extra_certs" {
+  for_each        = var.alb_extra_acm_cert_arn != [""] ? toset(var.alb_extra_acm_cert_arn) : []
+  listener_arn    = module.alb.https_listener_arns[0]
+  certificate_arn = each.key
+}
