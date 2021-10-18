@@ -26,6 +26,12 @@ variable "app_fqdn" {
   default     = null
 }
 
+variable "ecs_first_run" {
+  description = "Is this the first time this module being executed ?"
+  type        = bool
+  default     = false
+}
+
 # VPC
 variable "vpc_id" {
   description = "ID of an existing VPC where resources will be created"

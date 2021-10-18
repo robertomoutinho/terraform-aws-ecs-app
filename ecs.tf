@@ -1,15 +1,17 @@
 locals {
   task_definition_family_name   = "${var.environment}-${var.name}"
   container_name                = var.name
-  generated_task_definition_arn = "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:task-definition/${local.task_definition_family_name}:${data.aws_ecs_task_definition.app.revision}"
-  docker_image                  = data.aws_ecs_container_definition.app.image == "" ? "nginx:latest" : data.aws_ecs_container_definition.app.image
+  generated_task_definition_arn = "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:task-definition/${local.task_definition_family_name}:${var.ecs_first_run ? "0" : data.aws_ecs_task_definition.app[0].revision}"
+  docker_image                  = var.ecs_first_run ? "nginx:latest" : data.aws_ecs_container_definition.app[0].image
 }
 
 data "aws_ecs_task_definition" "app" {
+  count           = var.ecs_first_run ? 0 : 1
   task_definition = local.task_definition_family_name
 }
 
 data "aws_ecs_container_definition" "app" {
+  count           = var.ecs_first_run ? 0 : 1
   task_definition = local.generated_task_definition_arn
   container_name  = local.container_name
 }
@@ -19,12 +21,9 @@ data "aws_ecs_container_definition" "app" {
 #########
 
 resource "aws_ecs_service" "app" {
-  name    = var.name
-  cluster = var.ecs_cluster_id
-  task_definition = "${data.aws_ecs_task_definition.app.family}:${max(
-    aws_ecs_task_definition.app.revision,
-    data.aws_ecs_task_definition.app.revision,
-  )}"
+  name                               = var.name
+  cluster                            = var.ecs_cluster_id
+  task_definition                    = "${local.task_definition_family_name}:${var.ecs_first_run ? aws_ecs_task_definition.app.revision : max(aws_ecs_task_definition.app.revision, data.aws_ecs_task_definition.app[0].revision)}"
   desired_count                      = var.ecs_service_desired_count
   launch_type                        = "FARGATE"
   propagate_tags                     = "SERVICE"
