@@ -68,9 +68,10 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_alb_log_bucket_name"></a> [alb\_log\_bucket\_name](#input\_alb\_log\_bucket\_name) | S3 bucket (externally created) for storing load balancer access logs. Required if alb\_logging\_enabled is true. | `string` | `""` | no |
 | <a name="input_alb_log_location_prefix"></a> [alb\_log\_location\_prefix](#input\_alb\_log\_location\_prefix) | S3 prefix within the log\_bucket\_name under which logs are stored. | `string` | `""` | no |
 | <a name="input_alb_logging_enabled"></a> [alb\_logging\_enabled](#input\_alb\_logging\_enabled) | Controls if the ALB will log requests to S3. | `bool` | `false` | no |
-| <a name="input_app_ecr_image_repo"></a> [app\_ecr\_image\_repo](#input\_app\_ecr\_image\_repo) | The ECR Repository where the app image is located | `string` | n/a | yes |
+| <a name="input_app_docker_image"></a> [app\_docker\_image](#input\_app\_docker\_image) | The docker image to be used. If set, app\_ecr\_image\_repo will be ignored | `string` | `""` | no |
+| <a name="input_app_ecr_image_repo"></a> [app\_ecr\_image\_repo](#input\_app\_ecr\_image\_repo) | The ECR Repository where the app image is located | `string` | `""` | no |
 | <a name="input_app_fqdn"></a> [app\_fqdn](#input\_app\_fqdn) | FQDN of app to use. Set this only to override Route53 and ALB's DNS name. | `string` | `null` | no |
-| <a name="input_app_port"></a> [app\_port](#input\_app\_port) | Local port app should be running on. Default value is most likely fine. | `number` | `4141` | no |
+| <a name="input_app_port_mapping"></a> [app\_port\_mapping](#input\_app\_port\_mapping) | The port mappings to configure for the container. This is a list of maps. Each map should contain "containerPort", "hostPort", and "protocol", where "protocol" is one of "tcp" or "udp". If using containers in a task with the awsvpc or host network mode, the hostPort can either be left blank or set to the same value as the containerPort | <pre>list(object({<br>    containerPort = number<br>    hostPort      = number<br>    protocol      = string<br>  }))</pre> | <pre>[<br>  {<br>    "containerPort": 80,<br>    "hostPort": 80,<br>    "protocol": "tcp"<br>  }<br>]</pre> | no |
 | <a name="input_asg_cooldown_to_scale_down_again"></a> [asg\_cooldown\_to\_scale\_down\_again](#input\_asg\_cooldown\_to\_scale\_down\_again) | The amount of time, in seconds, after a scaling activity completes and before the next scaling down activity can start. | `number` | `300` | no |
 | <a name="input_asg_cooldown_to_scale_up_again"></a> [asg\_cooldown\_to\_scale\_up\_again](#input\_asg\_cooldown\_to\_scale\_up\_again) | The amount of time, in seconds, after a scaling activity completes and before the next scaling up activity can start. | `number` | `60` | no |
 | <a name="input_asg_evaluation_periods"></a> [asg\_evaluation\_periods](#input\_asg\_evaluation\_periods) | The number of periods over which data is compared to the specified threshold. | `number` | `5` | no |
@@ -79,7 +80,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_asg_period"></a> [asg\_period](#input\_asg\_period) | The period in seconds over which the specified statistic is applied | `number` | `60` | no |
 | <a name="input_asg_threshold_cpu_to_scale_down"></a> [asg\_threshold\_cpu\_to\_scale\_down](#input\_asg\_threshold\_cpu\_to\_scale\_down) | The value against which the specified statistic is compared. | `number` | `40` | no |
 | <a name="input_asg_threshold_cpu_to_scale_up"></a> [asg\_threshold\_cpu\_to\_scale\_up](#input\_asg\_threshold\_cpu\_to\_scale\_up) | The value against which the specified statistic is compared. | `number` | `60` | no |
-| <a name="input_certificate_arn"></a> [certificate\_arn](#input\_certificate\_arn) | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | `string` | n/a | yes |
+| <a name="input_certificate_arn"></a> [certificate\_arn](#input\_certificate\_arn) | ARN of certificate issued by AWS ACM. | `string` | `""` | no |
 | <a name="input_cloudwatch_log_retention_in_days"></a> [cloudwatch\_log\_retention\_in\_days](#input\_cloudwatch\_log\_retention\_in\_days) | Retention period of app CloudWatch logs | `number` | `7` | no |
 | <a name="input_container_memory_reservation"></a> [container\_memory\_reservation](#input\_container\_memory\_reservation) | The amount of memory (in MiB) to reserve for the container | `number` | `128` | no |
 | <a name="input_create_route53_record"></a> [create\_route53\_record](#input\_create\_route53\_record) | Whether to create Route53 record for app | `bool` | `true` | no |
@@ -93,6 +94,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_ecs_service_desired_count"></a> [ecs\_service\_desired\_count](#input\_ecs\_service\_desired\_count) | The number of instances of the task definition to place and keep running | `number` | `1` | no |
 | <a name="input_ecs_task_cpu"></a> [ecs\_task\_cpu](#input\_ecs\_task\_cpu) | The number of cpu units used by the task | `number` | `256` | no |
 | <a name="input_ecs_task_memory"></a> [ecs\_task\_memory](#input\_ecs\_task\_memory) | The amount (in MiB) of memory used by the task | `number` | `512` | no |
+| <a name="input_enable_alb"></a> [enable\_alb](#input\_enable\_alb) | IF an application load balancer should be created | `bool` | `true` | no |
 | <a name="input_enable_asg"></a> [enable\_asg](#input\_enable\_asg) | If autoscaling should be enabled | `bool` | `false` | no |
 | <a name="input_enable_service_discovery"></a> [enable\_service\_discovery](#input\_enable\_service\_discovery) | Whether the service should be registered with Service Discovery. In order to use Service Disovery, an existing DNS Namespace must exist and be passed in. | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment | `string` | n/a | yes |
@@ -110,7 +112,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | A list of IDs of existing private subnets inside the VPC | `list(string)` | `[]` | no |
 | <a name="input_public_subnet_ids"></a> [public\_subnet\_ids](#input\_public\_subnet\_ids) | A list of IDs of existing public subnets inside the VPC | `list(string)` | `[]` | no |
 | <a name="input_route53_record_name"></a> [route53\_record\_name](#input\_route53\_record\_name) | Name of Route53 record to create ACM certificate in and main A-record. If null is specified, var.name is used instead. Provide empty string to point root domain name to ALB. | `string` | `null` | no |
-| <a name="input_route53_zone_name"></a> [route53\_zone\_name](#input\_route53\_zone\_name) | Route53 zone name to create ACM certificate in and main A-record, without trailing dot | `string` | n/a | yes |
+| <a name="input_route53_zone_name"></a> [route53\_zone\_name](#input\_route53\_zone\_name) | Route53 zone name to create ACM certificate in and main A-record, without trailing dot | `string` | `""` | no |
 | <a name="input_service_discovery_dns_record_type"></a> [service\_discovery\_dns\_record\_type](#input\_service\_discovery\_dns\_record\_type) | The type of the resource, which indicates the value that Amazon Route 53 returns in response to DNS queries. One of `A` or `SRV`. | `string` | `"A"` | no |
 | <a name="input_service_discovery_dns_ttl"></a> [service\_discovery\_dns\_ttl](#input\_service\_discovery\_dns\_ttl) | The amount of time, in seconds, that you want DNS resolvers to cache the settings for this resource record set. | `number` | `10` | no |
 | <a name="input_service_discovery_failure_threshold"></a> [service\_discovery\_failure\_threshold](#input\_service\_discovery\_failure\_threshold) | The number of 30-second intervals that you want service discovery to wait before it changes the health status of a service instance. Maximum value of 10. | `number` | `1` | no |
@@ -125,7 +127,6 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 |------|-------------|
 | <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | Dns name of alb |
 | <a name="output_alb_zone_id"></a> [alb\_zone\_id](#output\_alb\_zone\_id) | Zone ID of alb |
-| <a name="output_app_url"></a> [app\_url](#output\_app\_url) | URL of app |
 | <a name="output_ecs_security_group"></a> [ecs\_security\_group](#output\_ecs\_security\_group) | Security group assigned to ECS Service in network configuration |
 | <a name="output_ecs_task_definition"></a> [ecs\_task\_definition](#output\_ecs\_task\_definition) | Task definition for ECS service (used for external triggers) |
 | <a name="output_task_role_arn"></a> [task\_role\_arn](#output\_task\_role\_arn) | The app ECS task role arn |

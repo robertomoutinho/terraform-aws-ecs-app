@@ -174,8 +174,15 @@ variable "asg_cooldown_to_scale_down_again" {
 
 # ACM
 variable "certificate_arn" {
-  description = "ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS"
+  description = "ARN of certificate issued by AWS ACM."
   type        = string
+  default     = ""
+}
+
+variable "enable_alb" {
+  description = "IF an application load balancer should be created"
+  type        = bool
+  default     = true
 }
 
 variable "lb_extra_security_group_ids" {
@@ -188,6 +195,7 @@ variable "lb_extra_security_group_ids" {
 variable "route53_zone_name" {
   description = "Route53 zone name to create ACM certificate in and main A-record, without trailing dot"
   type        = string
+  default     = ""
 }
 
 variable "route53_record_name" {
@@ -269,15 +277,32 @@ variable "custom_container_definitions" {
 }
 
 # app
-variable "app_port" {
-  description = "Local port app should be running on. Default value is most likely fine."
-  type        = number
-  default     = 4141
+variable "app_port_mapping" {
+  description = "The port mappings to configure for the container. This is a list of maps. Each map should contain \"containerPort\", \"hostPort\", and \"protocol\", where \"protocol\" is one of \"tcp\" or \"udp\". If using containers in a task with the awsvpc or host network mode, the hostPort can either be left blank or set to the same value as the containerPort"
+  type = list(object({
+    containerPort = number
+    hostPort      = number
+    protocol      = string
+  }))
+  default = [
+    {
+      containerPort = 80
+      hostPort      = 80
+      protocol      = "tcp"
+    },
+  ]
 }
 
 variable "app_ecr_image_repo" {
   description = "The ECR Repository where the app image is located"
   type        = string
+  default     = ""
+}
+
+variable "app_docker_image" {
+  description = "The docker image to be used. If set, app_ecr_image_repo will be ignored"
+  type        = string
+  default     = ""
 }
 
 variable "custom_environment_secrets" {

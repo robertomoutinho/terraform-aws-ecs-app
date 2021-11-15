@@ -33,6 +33,12 @@ resource "aws_ecs_service" "app" {
   deployment_maximum_percent         = var.ecs_service_deployment_maximum_percent
   deployment_minimum_healthy_percent = var.ecs_service_deployment_minimum_healthy_percent
 
+  network_configuration {
+    subnets          = var.private_subnet_ids
+    security_groups  = [module.app_sg.this_security_group_id]
+    assign_public_ip = var.ecs_service_assign_public_ip
+  }
+
   dynamic "service_registries" {
     for_each = aws_service_discovery_service.sds
     content {
@@ -41,16 +47,13 @@ resource "aws_ecs_service" "app" {
     }
   }
 
-  network_configuration {
-    subnets          = var.private_subnet_ids
-    security_groups  = [module.app_sg.this_security_group_id]
-    assign_public_ip = var.ecs_service_assign_public_ip
-  }
-
-  load_balancer {
-    container_name   = local.container_name
-    container_port   = var.app_port
-    target_group_arn = element(module.alb.target_group_arns, 0)
+  dynamic "load_balancer" {
+    for_each = module.alb
+    content {
+      container_name   = local.container_name
+      container_port   = var.app_port_mapping.0.containerPort
+      target_group_arn = each.target_group_arns
+    }
   }
 
   tags = local.local_tags
@@ -61,19 +64,13 @@ module "container_definition" {
   version = "v0.58.1"
 
   container_name  = local.container_name
-  container_image = local.container_image
+  container_image = var.app_docker_image == "" ? local.container_image : var.app_docker_image
 
   container_cpu                = var.ecs_task_cpu
   container_memory             = var.ecs_task_memory
   container_memory_reservation = var.container_memory_reservation
 
-  port_mappings = [
-    {
-      containerPort = var.app_port
-      hostPort      = var.app_port
-      protocol      = "tcp"
-    },
-  ]
+  port_mappings = var.app_port_mapping
 
   log_configuration = {
     logDriver = "awslogs"
