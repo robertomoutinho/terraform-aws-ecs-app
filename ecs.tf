@@ -42,8 +42,8 @@ resource "aws_ecs_service" "app" {
   dynamic "service_registries" {
     for_each = aws_service_discovery_service.sds
     content {
-      registry_arn   = service_registries.value.arn
       container_name = local.container_name
+      registry_arn   = service_registries.value.arn
     }
   }
 
@@ -52,7 +52,7 @@ resource "aws_ecs_service" "app" {
     content {
       container_name   = local.container_name
       container_port   = var.app_port_mapping.0.containerPort
-      target_group_arn = each.target_group_arns
+      target_group_arn = load_balancer.value.target_group_arns[0]
     }
   }
 
