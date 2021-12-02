@@ -57,7 +57,7 @@ module "app_sg" {
 
   name        = "${var.environment}-${var.name}"
   vpc_id      = var.vpc_id
-  description = "Security group with open port (${var.app_port}) from ALB, egress ports are all world open"
+  description = "Security group with open port (${var.app_port_mapping.0.containerPort}) from ALB, egress ports are all world open"
 
   ingress_with_self = [
     {
@@ -67,8 +67,8 @@ module "app_sg" {
 
   ingress_with_cidr_blocks = [
     {
-      from_port   = var.app_port
-      to_port     = var.app_port
+      from_port   = var.app_port_mapping.0.containerPort
+      to_port     = var.app_port_mapping.0.containerPort
       protocol    = "tcp"
       description = "Service Discovery"
       cidr_blocks = data.aws_vpc.selected.cidr_block
@@ -77,15 +77,15 @@ module "app_sg" {
 
   ingress_with_source_security_group_id = [
     {
-      from_port                = var.app_port
-      to_port                  = var.app_port
+      from_port                = var.app_port_mapping.0.containerPort
+      to_port                  = var.app_port_mapping.0.containerPort
       protocol                 = "tcp"
       description              = "Ingress from Load Balancer SG"
       source_security_group_id = module.alb_https_sg.this_security_group_id
     },
     {
-      from_port                = var.app_port
-      to_port                  = var.app_port
+      from_port                = var.app_port_mapping.0.containerPort
+      to_port                  = var.app_port_mapping.0.containerPort
       protocol                 = "tcp"
       description              = "Ingress from Load Balancer SG"
       source_security_group_id = module.alb_http_sg.this_security_group_id

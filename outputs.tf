@@ -1,8 +1,3 @@
-output "app_url" {
-  description = "URL of app"
-  value       = local.app_url
-}
-
 output "task_role_arn" {
   description = "The app ECS task role arn"
   value       = aws_iam_role.ecs_task_execution.arn
@@ -15,12 +10,12 @@ output "vpc_id" {
 
 output "alb_dns_name" {
   description = "Dns name of alb"
-  value       = module.alb.this_lb_dns_name
+  value       = try(module.alb.0.this_lb_dns_name, null)
 }
 
 output "alb_zone_id" {
   description = "Zone ID of alb"
-  value       = module.alb.this_lb_zone_id
+  value       = try(module.alb.0.this_lb_zone_id, null)
 }
 
 output "ecs_task_definition" {

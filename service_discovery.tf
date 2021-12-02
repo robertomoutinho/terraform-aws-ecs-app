@@ -2,7 +2,7 @@ resource "aws_service_discovery_service" "sds" {
 
   count = var.enable_service_discovery ? 1 : 0
 
-  name = "${var.environment}-${var.name}"
+  name = var.name
 
   dns_config {
     namespace_id = var.service_discovery_namespace_id

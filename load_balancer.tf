@@ -3,6 +3,7 @@
 #########
 
 module "alb" {
+  count   = var.enable_alb ? 1 : 0
   source  = "terraform-aws-modules/alb/aws"
   version = "v5.13.0"
 
@@ -46,14 +47,14 @@ module "alb" {
     {
       name                 = "${var.environment}-${var.name}"
       backend_protocol     = "HTTP"
-      backend_port         = var.app_port
+      backend_port         = var.app_port_mapping.0.containerPort
       target_type          = "ip"
       deregistration_delay = 10
       health_check = {
         enabled             = true
         interval            = var.health_check_interval
         path                = var.health_check_path
-        port                = var.app_port
+        port                = var.app_port_mapping.0.containerPort
         healthy_threshold   = var.health_check_healthy_threshold
         unhealthy_threshold = var.health_check_unhealthy_threshold
         timeout             = var.health_check_timeout
@@ -69,7 +70,7 @@ module "alb" {
 
 ## Attach extra ACM SSL certificates
 resource "aws_lb_listener_certificate" "extra_certs" {
-  for_each        = length(var.alb_extra_acm_cert_arn) == 0 ? [] : toset(var.alb_extra_acm_cert_arn)
-  listener_arn    = module.alb.https_listener_arns[0]
+  for_each        = length(var.alb_extra_acm_cert_arn) == 0 && var.enable_alb == false ? [] : toset(var.alb_extra_acm_cert_arn)
+  listener_arn    = module.alb.0.https_listener_arns[0]
   certificate_arn = each.key
 }
