@@ -218,8 +218,8 @@ variable "cloudwatch_log_retention_in_days" {
 }
 
 # ECS Service / Task
-variable "ecs_cluster_id" {
-  description = "The ECS cluster ID"
+variable "ecs_cluster_name" {
+  description = "The ECS cluster Name"
 }
 
 variable "ecs_service_assign_public_ip" {

@@ -6,11 +6,15 @@ locals {
   latest_task_definition          = "${aws_ecs_task_definition.app.family}:${max(aws_ecs_task_definition.app.revision, data.external.current_image.result["task_definition_revision"])}"
 }
 
+data "aws_ecs_cluster" "cluster" {
+  cluster_name = var.ecs_cluster_name
+}
+
 data "external" "current_image" {
   program = ["bash", "${path.module}/scripts/app_image_version.sh"]
   query = {
     service    = local.ecs_service_name
-    cluster    = var.ecs_cluster_id
+    cluster    = data.aws_ecs_cluster.cluster.arn
     path_root  = jsonencode(path.root)
     account_id = data.aws_caller_identity.current.account_id
     region     = data.aws_region.current.name
@@ -24,7 +28,7 @@ data "external" "current_image" {
 
 resource "aws_ecs_service" "app" {
   name                               = local.ecs_service_name
-  cluster                            = var.ecs_cluster_id
+  cluster                            = data.aws_ecs_cluster.cluster.arn
   task_definition                    = "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:task-definition/${local.latest_task_definition}"
   desired_count                      = var.ecs_service_desired_count
   launch_type                        = "FARGATE"

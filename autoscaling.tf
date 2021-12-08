@@ -1,7 +1,7 @@
 resource "aws_appautoscaling_target" "target" {
   count              = var.enable_asg ? 1 : 0
   service_namespace  = "ecs"
-  resource_id        = "service/${var.ecs_cluster_id}/${aws_ecs_service.app.name}"
+  resource_id        = "service/${var.ecs_cluster_name}/${aws_ecs_service.app.name}"
   scalable_dimension = "ecs:service:DesiredCount"
   min_capacity       = var.asg_min_tasks
   max_capacity       = var.asg_max_tasks
