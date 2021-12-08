@@ -5,3 +5,7 @@ repos:
     - id: terraform_fmt
     - id: terraform_docs
     - id: terraform_tflint
+- repo: git://github.com/bridgecrewio/checkov
+  rev: '2.0.638'
+  hooks:
+    - id: checkov

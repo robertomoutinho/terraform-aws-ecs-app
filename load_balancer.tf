@@ -3,12 +3,13 @@
 #########
 
 module "alb" {
+
   count   = var.enable_alb ? 1 : 0
   source  = "terraform-aws-modules/alb/aws"
   version = "v5.13.0"
 
   name     = "${var.environment}-${var.name}"
-  internal = var.internal
+  internal = var.alb_internal
 
   vpc_id          = var.vpc_id
   subnets         = var.public_subnet_ids
@@ -70,7 +71,7 @@ module "alb" {
 
 ## Attach extra ACM SSL certificates
 resource "aws_lb_listener_certificate" "extra_certs" {
-  for_each        = length(var.alb_extra_acm_cert_arn) == 0 && var.enable_alb == false ? [] : toset(var.alb_extra_acm_cert_arn)
+  for_each        = length(compact(var.alb_extra_acm_cert_arn)) == 0 || var.enable_alb == false ? [] : toset(var.alb_extra_acm_cert_arn)
   listener_arn    = module.alb.0.https_listener_arns[0]
   certificate_arn = each.key
 }

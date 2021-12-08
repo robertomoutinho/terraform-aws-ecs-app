@@ -14,12 +14,6 @@ variable "name" {
   default     = "app"
 }
 
-variable "internal" {
-  description = "Whether the load balancer is internal or external"
-  type        = bool
-  default     = false
-}
-
 variable "app_fqdn" {
   description = "FQDN of app to use. Set this only to override Route53 and ALB's DNS name."
   type        = string
@@ -51,6 +45,18 @@ variable "private_subnet_ids" {
 }
 
 # ALB
+variable "enable_alb" {
+  description = "IF an application load balancer should be created"
+  type        = bool
+  default     = true
+}
+
+variable "alb_internal" {
+  description = "Whether the load balancer is internal or external"
+  type        = bool
+  default     = false
+}
+
 variable "alb_ingress_cidr_blocks" {
   description = "Comma separated string of IPv4 CIDR ranges to use on all ingress rules of the ALB."
   type        = string
@@ -177,12 +183,6 @@ variable "certificate_arn" {
   description = "ARN of certificate issued by AWS ACM."
   type        = string
   default     = ""
-}
-
-variable "enable_alb" {
-  description = "IF an application load balancer should be created"
-  type        = bool
-  default     = true
 }
 
 variable "lb_extra_security_group_ids" {
