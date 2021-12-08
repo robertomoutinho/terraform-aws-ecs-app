@@ -64,6 +64,7 @@ resource "aws_security_group_rule" "ingress_with_self_rule" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
+  self              = true
 }
 
 resource "aws_security_group_rule" "service_discovery_ingress_rule" {
