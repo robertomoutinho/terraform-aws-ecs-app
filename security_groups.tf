@@ -50,49 +50,51 @@ module "alb_http_sg" {
 ## App ##
 #########
 
-module "app_sg" {
-
-  source  = "terraform-aws-modules/security-group/aws"
-  version = "v3.18.0"
-
-  name        = "${var.environment}-${var.name}"
+resource "aws_security_group" "app" {
+  name        = "${var.environment}-${var.name}-sg"
+  description = "Security group for ${var.environment}-${var.name}"
   vpc_id      = var.vpc_id
-  description = "Security group with open port (${var.app_port_mapping.0.containerPort}) from ALB, egress ports are all world open"
+  tags        = local.local_tags
+}
 
-  ingress_with_self = [
-    {
-      rule = "all-all"
-    },
-  ]
+resource "aws_security_group_rule" "ingress_with_self_rule" {
+  security_group_id = aws_security_group.app.id
+  type              = "ingress"
+  description       = "Ingress with self"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+}
 
-  ingress_with_cidr_blocks = [
-    {
-      from_port   = var.app_port_mapping.0.containerPort
-      to_port     = var.app_port_mapping.0.containerPort
-      protocol    = "tcp"
-      description = "Service Discovery"
-      cidr_blocks = data.aws_vpc.selected.cidr_block
-    },
-  ]
+resource "aws_security_group_rule" "service_discovery_ingress_rule" {
+  for_each          = { for name, config in var.app_port_mapping : name => config }
+  security_group_id = aws_security_group.app.id
+  type              = "ingress"
+  cidr_blocks       = [data.aws_vpc.selected.cidr_block]
+  description       = "Service Discovery Ingress"
+  from_port         = each.value.hostPort
+  to_port           = each.value.hostPort
+  protocol          = "tcp"
+}
 
-  ingress_with_source_security_group_id = [
-    {
-      from_port                = var.app_port_mapping.0.containerPort
-      to_port                  = var.app_port_mapping.0.containerPort
-      protocol                 = "tcp"
-      description              = "Ingress from Load Balancer SG"
-      source_security_group_id = module.alb_https_sg.this_security_group_id
-    },
-    {
-      from_port                = var.app_port_mapping.0.containerPort
-      to_port                  = var.app_port_mapping.0.containerPort
-      protocol                 = "tcp"
-      description              = "Ingress from Load Balancer SG"
-      source_security_group_id = module.alb_http_sg.this_security_group_id
-    },
-  ]
+resource "aws_security_group_rule" "ingress_with_alb_https_security_group_id" {
+  for_each                 = { for name, config in var.app_port_mapping : name => config }
+  security_group_id        = aws_security_group.app.id
+  type                     = "ingress"
+  source_security_group_id = module.alb_https_sg.this_security_group_id
+  description              = "ALB HTTPS"
+  from_port                = each.value.hostPort
+  to_port                  = each.value.hostPort
+  protocol                 = "tcp"
+}
 
-  egress_rules = ["all-all"]
-  tags         = local.local_tags
-
+resource "aws_security_group_rule" "ingress_with_alb_http_security_group_id" {
+  for_each                 = { for name, config in var.app_port_mapping : name => config }
+  security_group_id        = aws_security_group.app.id
+  type                     = "ingress"
+  source_security_group_id = module.alb_http_sg.this_security_group_id
+  description              = "ALB HTTP"
+  from_port                = each.value.hostPort
+  to_port                  = each.value.hostPort
+  protocol                 = "tcp"
 }
