@@ -57,6 +57,16 @@ resource "aws_security_group" "app" {
   tags        = local.local_tags
 }
 
+resource "aws_security_group_rule" "allow_all" {
+  security_group_id = aws_security_group.app.id
+  type              = "egress"
+  description       = "Egress allow all"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
 resource "aws_security_group_rule" "ingress_with_self_rule" {
   security_group_id = aws_security_group.app.id
   type              = "ingress"
