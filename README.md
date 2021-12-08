@@ -9,6 +9,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 - AWS IAM necessary to access other AWS resources (such as S3, SNS and etc)
 - AWS Cloudwatch for the logs
 
+[![Checkov](https://github.com/robertomoutinho/terraform-aws-ecs-app/actions/workflows/checkov.yml/badge.svg)](https://github.com/robertomoutinho/terraform-aws-ecs-app/actions/workflows/checkov.yml)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
