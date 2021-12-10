@@ -305,6 +305,12 @@ variable "app_docker_image" {
   default     = ""
 }
 
+variable "app_container_command" {
+  type        = list(string)
+  description = "The command that is passed to the container"
+  default     = null
+}
+
 variable "custom_environment_secrets" {
   description = "List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`)"
   type = list(object(

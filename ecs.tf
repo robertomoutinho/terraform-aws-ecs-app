@@ -69,6 +69,7 @@ module "container_definition" {
 
   container_name  = local.container_name
   container_image = var.app_docker_image == "" ? local.container_image : var.app_docker_image
+  command         = var.app_container_command
 
   container_cpu                = var.ecs_task_cpu
   container_memory             = var.ecs_task_memory

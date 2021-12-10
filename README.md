@@ -81,6 +81,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_alb_log_bucket_name"></a> [alb\_log\_bucket\_name](#input\_alb\_log\_bucket\_name) | S3 bucket (externally created) for storing load balancer access logs. Required if alb\_logging\_enabled is true. | `string` | `""` | no |
 | <a name="input_alb_log_location_prefix"></a> [alb\_log\_location\_prefix](#input\_alb\_log\_location\_prefix) | S3 prefix within the log\_bucket\_name under which logs are stored. | `string` | `""` | no |
 | <a name="input_alb_logging_enabled"></a> [alb\_logging\_enabled](#input\_alb\_logging\_enabled) | Controls if the ALB will log requests to S3. | `bool` | `false` | no |
+| <a name="input_app_container_command"></a> [app\_container\_command](#input\_app\_container\_command) | The command that is passed to the container | `list(string)` | `null` | no |
 | <a name="input_app_docker_image"></a> [app\_docker\_image](#input\_app\_docker\_image) | The docker image to be used. If set, app\_ecr\_image\_repo will be ignored | `string` | `""` | no |
 | <a name="input_app_ecr_image_repo"></a> [app\_ecr\_image\_repo](#input\_app\_ecr\_image\_repo) | The ECR Repository where the app image is located | `string` | `""` | no |
 | <a name="input_app_fqdn"></a> [app\_fqdn](#input\_app\_fqdn) | FQDN of app to use. Set this only to override Route53 and ALB's DNS name. | `string` | `null` | no |
