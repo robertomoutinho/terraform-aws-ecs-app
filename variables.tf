@@ -14,6 +14,12 @@ variable "name" {
   default     = "app"
 }
 
+variable "secret_path" {
+  description = "path to append to IAM secrets access policy"
+  type        = string
+  default     = ""
+}
+
 variable "app_fqdn" {
   description = "FQDN of app to use. Set this only to override Route53 and ALB's DNS name."
   type        = string

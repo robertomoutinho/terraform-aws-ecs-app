@@ -13,4 +13,6 @@ locals {
     var.tags,
   )
 
+  secret_path = var.secret_path != "" ? var.secret_path : var.name
+
 }
