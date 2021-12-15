@@ -3,14 +3,14 @@
 ####################
 
 data "aws_route53_zone" "this" {
-  count        = var.enable_alb ? 1 : 0
+  count        = var.enable_alb && var.create_route53_record ? 1 : 0
   name         = var.route53_zone_name
   private_zone = false
 }
 
 resource "aws_route53_record" "app" {
 
-  count   = var.enable_alb ? 1 : 0
+  count   = var.enable_alb && var.create_route53_record ? 1 : 0
   zone_id = data.aws_route53_zone.this[0].zone_id
   name    = var.route53_record_name != null ? var.route53_record_name : var.name
   type    = "A"
