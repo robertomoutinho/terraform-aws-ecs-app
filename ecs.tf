@@ -92,6 +92,27 @@ module "container_definition" {
 
 }
 
+module "datadog_sidecar" {
+  source  = "cloudposse/ecs-container-definition/aws"
+  version = "v0.58.1"
+
+  container_name  = "datadog-agent"
+  container_image = "datadog/agent:latest"
+
+  environment = [
+    {
+      name  = "ECS_FARGATE"
+      value = "true"
+    },
+  ]
+  secrets = [
+    {
+      name      = "DD_API_KEY"
+      valueFrom = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment}/shared/datadog/api_key"
+    },
+  ]
+}
+
 resource "aws_ecs_task_definition" "app" {
 
   family                   = local.ecs_task_definition_family_name
@@ -101,7 +122,6 @@ resource "aws_ecs_task_definition" "app" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.ecs_task_cpu
   memory                   = var.ecs_task_memory
-  container_definitions    = module.container_definition.json_map_encoded_list
-
-  tags = local.local_tags
+  container_definitions    = var.enable_datadog_sidecar ? jsonencode([module.datadog_sidecar.json_map_object, module.container_definition.json_map_object]) : module.container_definition.json_map_encoded_list
+  tags                     = local.local_tags
 }

@@ -34,6 +34,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="module_alb_http_sg"></a> [alb\_http\_sg](#module\_alb\_http\_sg) | terraform-aws-modules/security-group/aws | v3.18.0 |
 | <a name="module_alb_https_sg"></a> [alb\_https\_sg](#module\_alb\_https\_sg) | terraform-aws-modules/security-group/aws | v3.18.0 |
 | <a name="module_container_definition"></a> [container\_definition](#module\_container\_definition) | cloudposse/ecs-container-definition/aws | v0.58.1 |
+| <a name="module_datadog_sidecar"></a> [datadog\_sidecar](#module\_datadog\_sidecar) | cloudposse/ecs-container-definition/aws | v0.58.1 |
 
 ## Resources
 
@@ -110,6 +111,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_ecs_task_memory"></a> [ecs\_task\_memory](#input\_ecs\_task\_memory) | The amount (in MiB) of memory used by the task | `number` | `512` | no |
 | <a name="input_enable_alb"></a> [enable\_alb](#input\_enable\_alb) | IF an application load balancer should be created | `bool` | `true` | no |
 | <a name="input_enable_asg"></a> [enable\_asg](#input\_enable\_asg) | If autoscaling should be enabled | `bool` | `false` | no |
+| <a name="input_enable_datadog_sidecar"></a> [enable\_datadog\_sidecar](#input\_enable\_datadog\_sidecar) | Whether the datadog sidecar should be added to the task definition | `bool` | `false` | no |
 | <a name="input_enable_service_discovery"></a> [enable\_service\_discovery](#input\_enable\_service\_discovery) | Whether the service should be registered with Service Discovery. In order to use Service Disovery, an existing DNS Namespace must exist and be passed in. | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment | `string` | n/a | yes |
 | <a name="input_health_check_healthy_threshold"></a> [health\_check\_healthy\_threshold](#input\_health\_check\_healthy\_threshold) | Healthcheck interval | `number` | `3` | no |

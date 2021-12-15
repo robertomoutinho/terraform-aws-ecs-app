@@ -375,3 +375,10 @@ variable "service_discovery_failure_threshold" {
   type        = number
   default     = 1
 }
+
+## Datadog sidecar
+variable "enable_datadog_sidecar" {
+  description = "Whether the datadog sidecar should be added to the task definition"
+  type        = bool
+  default     = false
+}
