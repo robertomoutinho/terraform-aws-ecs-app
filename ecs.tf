@@ -102,7 +102,15 @@ module "datadog_sidecar" {
   environment = [
     {
       name  = "ECS_FARGATE"
-      value = "true"
+      value = true
+    },
+    {
+      name  = "DD_APM_ENABLED",
+      value = true
+    },
+    {
+      name  = "DD_TAGS"
+      value = replace(var.datadog_tags, ",", " ")
     },
   ]
   secrets = [

@@ -382,3 +382,9 @@ variable "enable_datadog_sidecar" {
   type        = bool
   default     = false
 }
+
+variable "datadog_tags" {
+  description = " Tags for datadog agent container."
+  type        = string
+  default     = "env:default, service:default, region:default"
+}
