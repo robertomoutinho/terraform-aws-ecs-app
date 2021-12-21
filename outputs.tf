@@ -27,3 +27,8 @@ output "ecs_security_group" {
   description = "Security group assigned to ECS Service in network configuration"
   value       = aws_security_group.app.id
 }
+
+output "cloudwatch_group_name" {
+  description = "The AWS cloudwatch group name"
+  value       = aws_cloudwatch_log_group.app.name
+}

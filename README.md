@@ -144,6 +144,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 |------|-------------|
 | <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | Dns name of alb |
 | <a name="output_alb_zone_id"></a> [alb\_zone\_id](#output\_alb\_zone\_id) | Zone ID of alb |
+| <a name="output_cloudwatch_group_name"></a> [cloudwatch\_group\_name](#output\_cloudwatch\_group\_name) | The AWS cloudwatch group name |
 | <a name="output_ecs_security_group"></a> [ecs\_security\_group](#output\_ecs\_security\_group) | Security group assigned to ECS Service in network configuration |
 | <a name="output_ecs_task_definition"></a> [ecs\_task\_definition](#output\_ecs\_task\_definition) | Task definition for ECS service (used for external triggers) |
 | <a name="output_task_role_arn"></a> [task\_role\_arn](#output\_task\_role\_arn) | The app ECS task role arn |
