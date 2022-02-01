@@ -270,6 +270,16 @@ variable "ecs_task_memory" {
   default     = 512
 }
 
+variable "ecs_ulimits" {
+  type = list(object({
+    name      = string
+    hardLimit = number
+    softLimit = number
+  }))
+  description = "Container ulimit settings. This is a list of maps, where each map should contain \"name\", \"hardLimit\" and \"softLimit\""
+  default     = null
+}
+
 variable "container_memory_reservation" {
   description = "The amount of memory (in MiB) to reserve for the container"
   type        = number

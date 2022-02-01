@@ -110,6 +110,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_ecs_service_desired_count"></a> [ecs\_service\_desired\_count](#input\_ecs\_service\_desired\_count) | The number of instances of the task definition to place and keep running | `number` | `1` | no |
 | <a name="input_ecs_task_cpu"></a> [ecs\_task\_cpu](#input\_ecs\_task\_cpu) | The number of cpu units used by the task | `number` | `256` | no |
 | <a name="input_ecs_task_memory"></a> [ecs\_task\_memory](#input\_ecs\_task\_memory) | The amount (in MiB) of memory used by the task | `number` | `512` | no |
+| <a name="input_ecs_ulimits"></a> [ecs\_ulimits](#input\_ecs\_ulimits) | Container ulimit settings. This is a list of maps, where each map should contain "name", "hardLimit" and "softLimit" | <pre>list(object({<br>    name      = string<br>    hardLimit = number<br>    softLimit = number<br>  }))</pre> | `null` | no |
 | <a name="input_enable_alb"></a> [enable\_alb](#input\_enable\_alb) | IF an application load balancer should be created | `bool` | `true` | no |
 | <a name="input_enable_asg"></a> [enable\_asg](#input\_enable\_asg) | If autoscaling should be enabled | `bool` | `false` | no |
 | <a name="input_enable_datadog_sidecar"></a> [enable\_datadog\_sidecar](#input\_enable\_datadog\_sidecar) | Whether the datadog sidecar should be added to the task definition | `bool` | `false` | no |
