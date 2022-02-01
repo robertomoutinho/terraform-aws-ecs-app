@@ -393,6 +393,12 @@ variable "enable_datadog_sidecar" {
   default     = false
 }
 
+variable "enable_datadog_log_forwarder" {
+  description = "Whether we create the lambda to forward logs to datadog"
+  type        = bool
+  default     = false
+}
+
 variable "datadog_tags" {
   description = " Tags for datadog agent container."
   type        = string
