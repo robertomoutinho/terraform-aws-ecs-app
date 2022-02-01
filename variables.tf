@@ -93,6 +93,12 @@ variable "alb_extra_acm_cert_arn" {
   default     = []
 }
 
+variable "alb_extra_security_group_ids" {
+  description = "List of one or more security groups to be added to the load balancer"
+  type        = list(string)
+  default     = []
+}
+
 variable "health_check_interval" {
   description = "Healthcheck interval"
   type        = number
@@ -189,12 +195,6 @@ variable "certificate_arn" {
   description = "ARN of certificate issued by AWS ACM."
   type        = string
   default     = ""
-}
-
-variable "lb_extra_security_group_ids" {
-  description = "List of one or more security groups to be added to the load balancer"
-  type        = list(string)
-  default     = []
 }
 
 # Route53

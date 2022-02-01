@@ -82,6 +82,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_alb_extra_acm_cert_arn"></a> [alb\_extra\_acm\_cert\_arn](#input\_alb\_extra\_acm\_cert\_arn) | The ARN of the ACM SSL certificate for the extra cert | `list(string)` | `[]` | no |
+| <a name="input_alb_extra_security_group_ids"></a> [alb\_extra\_security\_group\_ids](#input\_alb\_extra\_security\_group\_ids) | List of one or more security groups to be added to the load balancer | `list(string)` | `[]` | no |
 | <a name="input_alb_ingress_cidr_blocks"></a> [alb\_ingress\_cidr\_blocks](#input\_alb\_ingress\_cidr\_blocks) | Comma separated string of IPv4 CIDR ranges to use on all ingress rules of the ALB. | `string` | `"0.0.0.0/0"` | no |
 | <a name="input_alb_internal"></a> [alb\_internal](#input\_alb\_internal) | Whether the load balancer is internal or external | `bool` | `false` | no |
 | <a name="input_alb_log_bucket_name"></a> [alb\_log\_bucket\_name](#input\_alb\_log\_bucket\_name) | S3 bucket (externally created) for storing load balancer access logs. Required if alb\_logging\_enabled is true. | `string` | `""` | no |
@@ -129,7 +130,6 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_health_check_timeout"></a> [health\_check\_timeout](#input\_health\_check\_timeout) | Healthcheck interval | `number` | `5` | no |
 | <a name="input_health_check_unhealthy_threshold"></a> [health\_check\_unhealthy\_threshold](#input\_health\_check\_unhealthy\_threshold) | Healthcheck interval | `number` | `4` | no |
 | <a name="input_iam_role_for_external_datasource"></a> [iam\_role\_for\_external\_datasource](#input\_iam\_role\_for\_external\_datasource) | This Role is used to get the current app version deploy to ECS | `string` | n/a | yes |
-| <a name="input_lb_extra_security_group_ids"></a> [lb\_extra\_security\_group\_ids](#input\_lb\_extra\_security\_group\_ids) | List of one or more security groups to be added to the load balancer | `list(string)` | `[]` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name to use on all resources created (VPC, ALB, etc) | `string` | `"app"` | no |
 | <a name="input_policies_arn"></a> [policies\_arn](#input\_policies\_arn) | A list of the ARN of the policies you want to apply | `list(string)` | <pre>[<br>  "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"<br>]</pre> | no |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | A list of IDs of existing private subnets inside the VPC | `list(string)` | `[]` | no |

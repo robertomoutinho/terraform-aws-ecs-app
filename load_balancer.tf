@@ -13,7 +13,7 @@ module "alb" {
 
   vpc_id          = var.vpc_id
   subnets         = var.public_subnet_ids
-  security_groups = flatten([module.alb_https_sg.this_security_group_id, module.alb_http_sg.this_security_group_id, var.lb_extra_security_group_ids])
+  security_groups = flatten([module.alb_https_sg.this_security_group_id, module.alb_http_sg.this_security_group_id, var.alb_extra_security_group_ids])
 
   access_logs = {
     enabled = var.alb_logging_enabled
