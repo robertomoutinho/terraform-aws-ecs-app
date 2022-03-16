@@ -12,8 +12,8 @@ set -e
 eval "$(jq -r '@sh "role_arn=\(.role_arn) service=\(.service) cluster=\(.cluster) path_root=\(.path_root) account_id=\(.account_id) region=\(.region)"')"
 
 # Assume the account role before executing the script
-role_session_name='ecs'
-profile_name='ecs'
+role_session_name="ecs-$cluster-$service"
+profile_name="ecs-$cluster-$service"
 
 temp_role=$(aws sts assume-role \
                     --role-arn $role_arn \
