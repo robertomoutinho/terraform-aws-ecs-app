@@ -280,6 +280,12 @@ variable "ecs_ulimits" {
   default     = null
 }
 
+variable "ecs_pseudo_terminal" {
+  type        = bool
+  description = "When this parameter is true, a TTY is allocated. "
+  default     = null
+}
+
 variable "container_memory_reservation" {
   description = "The amount of memory (in MiB) to reserve for the container"
   type        = number
