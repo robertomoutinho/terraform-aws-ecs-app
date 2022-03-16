@@ -228,6 +228,12 @@ variable "ecs_cluster_name" {
   description = "The ECS cluster Name"
 }
 
+variable "ecs_launch_type" {
+  description = "The ECS cluster Name"
+  type        = string
+  default     = "FARGATE"
+}
+
 variable "ecs_service_assign_public_ip" {
   description = "Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html)"
   type        = bool

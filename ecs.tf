@@ -31,7 +31,7 @@ resource "aws_ecs_service" "app" {
   cluster                            = data.aws_ecs_cluster.cluster.arn
   task_definition                    = "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:task-definition/${local.latest_task_definition}"
   desired_count                      = var.ecs_service_desired_count
-  launch_type                        = "FARGATE"
+  launch_type                        = var.ecs_launch_type
   propagate_tags                     = "SERVICE"
   enable_ecs_managed_tags            = true
   deployment_maximum_percent         = var.ecs_service_deployment_maximum_percent
