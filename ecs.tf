@@ -139,8 +139,10 @@ resource "aws_ecs_task_definition" "app" {
     content {
       name = volume.value["name"]
       efs_volume_configuration {
-        file_system_id = volume.value["efs_volume_configuration"]["file_system_id"]
-        root_directory = volume.value["efs_volume_configuration"]["root_directory"]
+        file_system_id          = volume.value["efs_volume_configuration"]["file_system_id"]
+        root_directory          = volume.value["efs_volume_configuration"]["root_directory"]
+        transit_encryption      = "ENABLED"
+        transit_encryption_port = 2999
         authorization_config {
           access_point_id = volume.value["authorization_config"]["access_point_id"]
         }
