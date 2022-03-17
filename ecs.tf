@@ -137,10 +137,10 @@ resource "aws_ecs_task_definition" "app" {
   dynamic "volume" {
     for_each = var.ecs_volumes == null ? [] : toset(var.ecs_volumes)
     content {
-      name = volume.value
+      name = each.value.name
       efs_volume_configuration {
-        file_system_id = volume.value.efs_volume_configuration.file_system_id
-        root_directory = volume.value.efs_volume_configuration.root_directory
+        file_system_id = each.value.efs_volume_configuration.file_system_id
+        root_directory = each.value.efs_volume_configuration.root_directory
       }
     }
   }
