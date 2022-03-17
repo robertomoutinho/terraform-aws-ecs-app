@@ -138,12 +138,9 @@ resource "aws_ecs_task_definition" "app" {
     for_each = var.ecs_volumes == null ? [] : [1]
     content {
       name = volume.key
-      dynamic "efs_volume_configuration" {
-        for_each = volume.value.efs_volume_configuration
-        content {
-          file_system_id = efs_volume_configuration.value.file_system_id
-          root_directory = efs_volume_configuration.value.root_directory
-        }
+      efs_volume_configuration {
+        file_system_id = volume.value.efs_volume_configuration.value.file_system_id
+        root_directory = volume.value.efs_volume_configuration.value.root_directory
       }
     }
   }
