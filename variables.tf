@@ -292,6 +292,25 @@ variable "ecs_pseudo_terminal" {
   default     = null
 }
 
+variable "ecs_mount_points" {
+  type = list(object({
+    containerPath = string
+    sourceVolume  = string
+    readOnly      = bool
+  }))
+  description = "Container mount points. This is a list of maps, where each map should contain `containerPath`, `sourceVolume` and `readOnly`"
+  default     = []
+}
+
+variable "ecs_volumes_from" {
+  type = list(object({
+    sourceContainer = string
+    readOnly        = bool
+  }))
+  description = "A list of VolumesFrom maps which contain \"sourceContainer\" (name of the container that has the volumes to mount) and \"readOnly\" (whether the container can write to the volume)"
+  default     = []
+}
+
 variable "container_memory_reservation" {
   description = "The amount of memory (in MiB) to reserve for the container"
   type        = number

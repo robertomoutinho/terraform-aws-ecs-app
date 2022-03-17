@@ -78,6 +78,8 @@ module "container_definition" {
   container_memory_reservation = var.container_memory_reservation
 
   port_mappings = var.app_port_mapping
+  mount_points  = var.ecs_mount_points
+  volumes_from  = var.ecs_volumes_from
 
   log_configuration = {
     logDriver = "awslogs"
