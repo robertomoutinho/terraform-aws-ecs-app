@@ -306,10 +306,10 @@ variable "ecs_efs_volumes" {
   description = "(Optional) A set of volume blocks that containers in your task may use"
   type = list(object({
     name = string
-    efs_volume_configuration = list(object({
+    efs_volume_configuration = object({
       file_system_id = string
       root_directory = string
-    }))
+    })
   }))
   default = []
 }
