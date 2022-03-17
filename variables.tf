@@ -302,7 +302,7 @@ variable "ecs_mount_points" {
   default     = []
 }
 
-variable "ecs_volumes" {
+variable "ecs_efs_volumes" {
   description = "(Optional) A set of volume blocks that containers in your task may use"
   type = list(object({
     name = string
