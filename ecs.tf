@@ -142,6 +142,9 @@ resource "aws_ecs_task_definition" "app" {
         file_system_id = volume.value["efs_volume_configuration"]["file_system_id"]
         root_directory = volume.value["efs_volume_configuration"]["root_directory"]
       }
+      authorization_config {
+        access_point_id = volume.value["authorization_config"]["access_point_id"]
+      }
     }
   }
   tags = local.local_tags
