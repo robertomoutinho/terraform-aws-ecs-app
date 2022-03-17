@@ -305,14 +305,10 @@ variable "ecs_mount_points" {
 variable "ecs_volumes" {
   description = "(Optional) A set of volume blocks that containers in your task may use"
   type = list(object({
-    host_path = string
-    name      = string
+    name = string
     efs_volume_configuration = list(object({
       file_system_id = string
-      authorization_config = list(object({
-        access_point_id = string
-        iam             = string
-      }))
+      root_directory = string
     }))
   }))
   default = []

@@ -137,22 +137,12 @@ resource "aws_ecs_task_definition" "app" {
   dynamic "volume" {
     for_each = var.ecs_volumes == null ? [] : [1]
     content {
-      name      = volume.key
-      host_path = volume.value.host_path
-
+      name = volume.key
       dynamic "efs_volume_configuration" {
         for_each = volume.value.efs_volume_configuration
-
         content {
           file_system_id = efs_volume_configuration.value.file_system_id
-
-          dynamic "authorization_config" {
-            for_each = efs_volume_configuration.value.authorization_config
-            content {
-              access_point_id = authorization_config.value.access_point_id
-              iam             = authorization_config.value.iam
-            }
-          }
+          root_directory = efs_volume_configuration.value.root_directory
         }
       }
     }
