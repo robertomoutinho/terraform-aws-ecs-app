@@ -143,9 +143,6 @@ resource "aws_ecs_task_definition" "app" {
       dynamic "efs_volume_configuration" {
         for_each = volume.value.efs_volume_configuration
 
-        transit_encryption      = "ENABLED"
-        transit_encryption_port = 2999
-
         content {
           file_system_id = efs_volume_configuration.value.file_system_id
 
