@@ -79,7 +79,6 @@ module "container_definition" {
 
   port_mappings = var.app_port_mapping
   mount_points  = var.ecs_mount_points
-  volumes_from  = var.ecs_volumes_from
 
   log_configuration = {
     logDriver = "awslogs"
@@ -126,7 +125,7 @@ module "datadog_sidecar" {
 }
 
 resource "aws_ecs_task_definition" "app" {
-
+  #checkov:skip=CKV_AWS_97:
   family                   = local.ecs_task_definition_family_name
   execution_role_arn       = aws_iam_role.ecs_task_execution.arn
   task_role_arn            = aws_iam_role.ecs_task_execution.arn
@@ -135,5 +134,31 @@ resource "aws_ecs_task_definition" "app" {
   cpu                      = var.ecs_task_cpu
   memory                   = var.ecs_task_memory
   container_definitions    = var.enable_datadog_sidecar ? jsonencode([module.container_definition.json_map_object, module.datadog_sidecar.json_map_object]) : module.container_definition.json_map_encoded_list
-  tags                     = local.local_tags
+  dynamic "volume" {
+    for_each = var.ecs_volumes == null ? [] : [1]
+    content {
+      name      = volume.key
+      host_path = volume.value.host_path
+
+      dynamic "efs_volume_configuration" {
+        for_each = volume.value.efs_volume_configuration
+
+        transit_encryption      = "ENABLED"
+        transit_encryption_port = 2999
+
+        content {
+          file_system_id = efs_volume_configuration.value.file_system_id
+
+          dynamic "authorization_config" {
+            for_each = efs_volume_configuration.value.authorization_config
+            content {
+              access_point_id = authorization_config.value.access_point_id
+              iam             = authorization_config.value.iam
+            }
+          }
+        }
+      }
+    }
+  }
+  tags = local.local_tags
 }

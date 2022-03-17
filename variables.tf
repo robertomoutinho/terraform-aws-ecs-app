@@ -298,17 +298,24 @@ variable "ecs_mount_points" {
     sourceVolume  = string
     readOnly      = bool
   }))
-  description = "Container mount points. This is a list of maps, where each map should contain `containerPath`, `sourceVolume` and `readOnly`"
+  description = "(Optional) Container mount points. This is a list of maps, where each map should contain `containerPath`, `sourceVolume` and `readOnly`"
   default     = []
 }
 
-variable "ecs_volumes_from" {
+variable "ecs_volumes" {
+  description = "(Optional) A set of volume blocks that containers in your task may use"
   type = list(object({
-    sourceContainer = string
-    readOnly        = bool
+    host_path = string
+    name      = string
+    efs_volume_configuration = list(object({
+      file_system_id = string
+      authorization_config = list(object({
+        access_point_id = string
+        iam             = string
+      }))
+    }))
   }))
-  description = "A list of VolumesFrom maps which contain \"sourceContainer\" (name of the container that has the volumes to mount) and \"readOnly\" (whether the container can write to the volume)"
-  default     = []
+  default = []
 }
 
 variable "container_memory_reservation" {
