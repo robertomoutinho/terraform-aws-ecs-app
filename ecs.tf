@@ -135,9 +135,9 @@ resource "aws_ecs_task_definition" "app" {
   memory                   = var.ecs_task_memory
   container_definitions    = var.enable_datadog_sidecar ? jsonencode([module.container_definition.json_map_object, module.datadog_sidecar.json_map_object]) : module.container_definition.json_map_encoded_list
   dynamic "volume" {
-    for_each = var.ecs_volumes == null ? [] : toset(var.ecs_volumes)
+    for_each = var.ecs_volumes
     content {
-      name = each.value.name
+      name = each.key
       efs_volume_configuration {
         file_system_id = each.value.efs_volume_configuration.file_system_id
         root_directory = each.value.efs_volume_configuration.root_directory
