@@ -13,6 +13,6 @@ locals {
     var.tags,
   )
 
-  secret_path = var.secret_path != "" ? var.secret_path : var.name
+  secret_path = var.secret_path != "" ? var.secret_path : "${var.environment}/${var.name}"
 
 }
