@@ -105,11 +105,13 @@ module "datadog_sidecar" {
   port_mappings = [
     {
       "protocol": "tcp",
-      "containerPort": 8125
+      "containerPort": 8125,
+      "hostPort": 8125
     },
     {
       "protocol": "tcp",
-      "containerPort": 8126
+      "containerPort": 8126,
+      "hostPort": 8126
     }
   ]
 
