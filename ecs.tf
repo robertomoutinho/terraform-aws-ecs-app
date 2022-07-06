@@ -140,8 +140,8 @@ module "datadog_sidecar" {
 resource "aws_ecs_task_definition" "app" {
   #checkov:skip=CKV_AWS_97:
   family                   = local.ecs_task_definition_family_name
-  execution_role_arn       = aws_iam_role.ecs_task_execution.arn
-  task_role_arn            = aws_iam_role.ecs_task_execution.arn
+  execution_role_arn       = var.create_default_role ? aws_iam_role.ecs_task_execution.arn : var.external_iam_role
+  task_role_arn            = var.create_default_role ? aws_iam_role.ecs_task_execution.arn : var.external_iam_role
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.ecs_task_cpu

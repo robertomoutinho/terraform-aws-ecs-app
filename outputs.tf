@@ -35,5 +35,5 @@ output "cloudwatch_group_name" {
 
 output "iam_role_arn" {
   description = "The created IAM Role ARN"
-  value       = aws_iam_role.ecs_task_execution.arn
+  value       = var.create_default_role ? aws_iam_role.ecs_task_execution.arn : var.external_iam_role
 }

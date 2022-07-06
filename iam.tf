@@ -18,17 +18,17 @@ data "aws_iam_policy_document" "ecs_tasks" {
 }
 
 resource "aws_iam_role" "ecs_task_execution" {
+  count              = var.create_default_role ? 1 : 0
   name               = "${var.environment}-${var.name}-ecs-task-execution"
   assume_role_policy = data.aws_iam_policy_document.ecs_tasks.json
   tags               = local.local_tags
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
-  count      = length(var.policies_arn)
-  role       = aws_iam_role.ecs_task_execution.id
-  policy_arn = element(var.policies_arn, count.index)
+  count       = var.create_default_role ? length(var.policies_arn) : 0
+  role        = aws_iam_role.ecs_task_execution[0].id
+  policy_arn  = element(var.policies_arn, count.index)
 }
-
 
 ###################
 ## Secrets Acess ##
@@ -53,10 +53,9 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
 }
 
 resource "aws_iam_role_policy" "ecs_task_access_secrets" {
-
-  count   = var.create_default_policies ? 1 : 0
+  count   = var.create_default_role ? 1 : 0
   name    = "ECSTaskAccessSecretsPolicy"
-  role    = aws_iam_role.ecs_task_execution.id
+  role    = aws_iam_role.ecs_task_execution[0].id
   policy  = element(
     compact(
       concat(
@@ -65,7 +64,6 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
     ),
     0,
   )
-
 }
 
 #######################
@@ -75,11 +73,9 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
 data "aws_iam_policy_document" "ecs_task_access_backend" {
   statement {
     effect = "Allow"
-
     resources = [
       "arn:aws:s3:::*"
     ]
-
     actions = [
       "s3:*",
     ]
@@ -87,10 +83,9 @@ data "aws_iam_policy_document" "ecs_task_access_backend" {
 }
 
 resource "aws_iam_role_policy" "ecs_task_access_backend" {
-
-  count   = var.create_default_policies ? 1 : 0
+  count   = var.create_default_role ? 1 : 0
   name    = "ECSTaskAccessBackendPolicy"
-  role    = aws_iam_role.ecs_task_execution.id
+  role    = aws_iam_role.ecs_task_execution[0].id
   policy  = element(
     compact(
       concat(
@@ -99,5 +94,4 @@ resource "aws_iam_role_policy" "ecs_task_access_backend" {
     ),
     0,
   )
-
 }

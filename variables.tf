@@ -224,8 +224,8 @@ variable "cloudwatch_log_retention_in_days" {
 }
 
 # IAM
-variable "create_default_policies" {
-  description = "Default policies for secrets and s3 access should be created ?"
+variable "create_default_role" {
+  description = "Default role + policies for secrets and s3 access should be created ?"
   type        = bool
   default     = true
 }
@@ -234,6 +234,12 @@ variable "policies_arn" {
   description = "A list of the ARN of the policies you want to apply"
   type        = list(string)
   default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+}
+
+variable "external_iam_role" {
+  description = "The ARN of the role to be attached to the ECS container"
+  type        = string
+  default     = ""
 }
 
 # ECS Service / Task
