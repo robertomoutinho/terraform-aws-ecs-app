@@ -223,6 +223,19 @@ variable "cloudwatch_log_retention_in_days" {
   default     = 7
 }
 
+# IAM
+variable "create_default_policies" {
+  description = "Default policies for secrets and s3 access should be created ?"
+  type        = bool
+  default     = true
+}
+
+variable "policies_arn" {
+  description = "A list of the ARN of the policies you want to apply"
+  type        = list(string)
+  default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+}
+
 # ECS Service / Task
 variable "ecs_cluster_name" {
   description = "The ECS cluster Name"
@@ -238,12 +251,6 @@ variable "ecs_service_assign_public_ip" {
   description = "Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html)"
   type        = bool
   default     = false
-}
-
-variable "policies_arn" {
-  description = "A list of the ARN of the policies you want to apply"
-  type        = list(string)
-  default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
 
 variable "ecs_service_desired_count" {

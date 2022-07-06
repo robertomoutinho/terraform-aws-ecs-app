@@ -102,6 +102,17 @@ module "datadog_sidecar" {
   container_name  = "datadog-agent"
   container_image = "datadog/agent:latest"
 
+  port_mappings = [
+    {
+      "protocol": "tcp",
+      "containerPort": 8125
+    },
+    {
+      "protocol": "tcp",
+      "containerPort": 8126
+    }
+  ]
+
   environment = [
     {
       name  = "ECS_FARGATE"
