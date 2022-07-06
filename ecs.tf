@@ -125,6 +125,10 @@ module "datadog_sidecar" {
       value = true
     },
     {
+      name  = "DD_CONTAINER_EXCLUDE",
+      value = "name:datadog-agent"
+    },
+    {
       name  = "DD_TAGS"
       value = replace(var.datadog_tags, ",", " ")
     },
