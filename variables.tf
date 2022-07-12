@@ -399,6 +399,8 @@ variable "custom_environment_variables" {
   default = []
 }
 
+
+
 ## Service discovery
 variable "enable_service_discovery" {
   description = "Whether the service should be registered with Service Discovery. In order to use Service Disovery, an existing DNS Namespace must exist and be passed in."
@@ -447,6 +449,26 @@ variable "enable_datadog_log_forwarder" {
   description = "Whether we create the lambda to forward logs to datadog"
   type        = bool
   default     = false
+}
+
+# variable "datadog_log_forwarder_type" {
+#   description = "The method to ship container logs to Datadog (either using CLOUDWATCH or FIRELENS)"
+#   type        = string
+#   default     = "CLOUDWATCH"
+#   validation {
+#     condition     = contains(["CLOUDWATCH", "FIRELENS"], var.datadog_log_forwarder_type)
+#     error_message = "Allowed values for input_parameter are \"CLOUDWATCH\" or \"FIRELENS\"."
+#   }
+# }
+
+variable "datadog_agent_container_image" {
+  description = "The datadog agent sidecar container image"
+  default     = "datadog/agent:latest"
+}
+
+variable "datadog_firelens_container_image" {
+  description = "The datadog firelens sidecar container image"
+  default     = "amazon/aws-for-fluent-bit:latest"
 }
 
 variable "datadog_tags" {

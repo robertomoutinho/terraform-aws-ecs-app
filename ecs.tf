@@ -80,7 +80,23 @@ module "container_definition" {
   port_mappings = var.app_port_mapping
   mount_points  = var.ecs_mount_points
 
-  log_configuration = {
+  log_configuration = var.enable_datadog_log_forwarder && var.datadog_log_forwarder_type == "FIRELENS" ? {
+    logDriver = "awsfirelens"
+    options = {
+      "Name" = "datadog",
+      "dd_service" = var.name,
+      "dd_source" = "firelens",
+      "dd_tags" = replace(var.datadog_tags, ",", " "),
+      "TLS" = "on",
+      "provider" = "ecs"
+    }
+    secretOptions = [
+      {
+        name      = "apiKey",
+        valueFrom = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment}/shared/datadog/api_key"
+      }
+    ]
+  } : {
     logDriver = "awslogs"
     options = {
       awslogs-region        = data.aws_region.current.name
@@ -90,55 +106,21 @@ module "container_definition" {
     secretOptions = []
   }
 
+  container_depends_on = var.enable_datadog_sidecar ? [
+    {
+      containerName = "datadog-agent"
+      condition     = "START"
+    }
+  ] : null
+
+  docker_labels = var.enable_datadog_sidecar ? {
+    "com.datadoghq.tags.env" = var.environment,
+    "com.datadoghq.tags.service" = var.name
+  } : null
+
   environment = var.custom_environment_variables
   secrets     = var.custom_environment_secrets
 
-}
-
-module "datadog_sidecar" {
-  source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.58.1"
-
-  container_name  = "datadog-agent"
-  container_image = "datadog/agent:latest"
-
-  port_mappings = [
-    {
-      "protocol": "tcp",
-      "containerPort": 8125,
-      "hostPort": 8125
-    },
-    {
-      "protocol": "tcp",
-      "containerPort": 8126,
-      "hostPort": 8126
-    }
-  ]
-
-  environment = [
-    {
-      name  = "ECS_FARGATE"
-      value = true
-    },
-    {
-      name  = "DD_APM_ENABLED",
-      value = true
-    },
-    {
-      name  = "DD_CONTAINER_EXCLUDE",
-      value = "name:datadog-agent"
-    },
-    {
-      name  = "DD_TAGS"
-      value = replace(var.datadog_tags, ",", " ")
-    },
-  ]
-  secrets = [
-    {
-      name      = "DD_API_KEY"
-      valueFrom = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment}/shared/datadog/api_key"
-    },
-  ]
 }
 
 resource "aws_ecs_task_definition" "app" {
@@ -150,7 +132,15 @@ resource "aws_ecs_task_definition" "app" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.ecs_task_cpu
   memory                   = var.ecs_task_memory
-  container_definitions    = var.enable_datadog_sidecar ? jsonencode([module.container_definition.json_map_object, module.datadog_sidecar.json_map_object]) : module.container_definition.json_map_encoded_list
+
+  container_definitions    = ( 
+    var.enable_datadog_sidecar && var.enable_datadog_log_forwarder
+      ? jsonencode([module.container_definition.json_map_object, module.datadog_sidecar.json_map_object, module.datadog_firelens.json_map_object ]) 
+      : var.enable_datadog_sidecar
+      ? jsonencode([module.container_definition.json_map_object, module.datadog_sidecar.json_map_object ]) 
+      : module.container_definition.json_map_encoded_list
+  )
+
   dynamic "volume" {
     for_each = { for k, v in var.ecs_efs_volumes : k => v }
     content {
