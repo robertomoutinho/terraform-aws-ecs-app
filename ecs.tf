@@ -80,7 +80,7 @@ module "container_definition" {
   port_mappings = var.app_port_mapping
   mount_points  = var.ecs_mount_points
 
-  log_configuration = (var.enable_datadog_log_forwarder {
+  log_configuration = (var.enable_datadog_log_forwarder ? {
     logDriver = "awsfirelens"
     options = {
       "Name" = "datadog",
