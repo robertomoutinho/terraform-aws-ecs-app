@@ -80,7 +80,7 @@ module "container_definition" {
   port_mappings = var.app_port_mapping
   mount_points  = var.ecs_mount_points
 
-  log_configuration = var.enable_datadog_log_forwarder {
+  log_configuration = (var.enable_datadog_log_forwarder {
     logDriver = "awsfirelens"
     options = {
       "Name" = "datadog",
@@ -104,19 +104,19 @@ module "container_definition" {
       awslogs-stream-prefix = "ecs"
     }
     secretOptions = []
-  }
+  })
 
-  container_depends_on = var.enable_datadog_sidecar ? [
+  container_depends_on = (var.enable_datadog_sidecar ? [
     {
       containerName = "datadog-agent"
       condition     = "START"
     }
-  ] : null
+  ] : null)
 
-  docker_labels = var.enable_datadog_sidecar ? {
+  docker_labels = (var.enable_datadog_sidecar ? {
     "com.datadoghq.tags.env" = var.environment,
     "com.datadoghq.tags.service" = var.name
-  } : null
+  } : null)
 
   environment = var.custom_environment_variables
   secrets     = var.custom_environment_secrets
