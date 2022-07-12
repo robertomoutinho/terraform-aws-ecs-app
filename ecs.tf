@@ -113,10 +113,10 @@ module "container_definition" {
     }
   ] : null)
 
-  docker_labels = (var.enable_datadog_sidecar ? {
-    "com.datadoghq.tags.env" = var.environment,
-    "com.datadoghq.tags.service" = var.name
-  } : null)
+  # docker_labels = (var.enable_datadog_sidecar ? {
+  #   "com.datadoghq.tags.env" = var.environment,
+  #   "com.datadoghq.tags.service" = var.name
+  # } : null)
 
   environment = var.custom_environment_variables
   secrets     = var.custom_environment_secrets
