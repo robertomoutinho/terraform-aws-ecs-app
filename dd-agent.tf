@@ -46,7 +46,7 @@ module "datadog_sidecar" {
     },
     {
       name  = "DD_CONTAINER_EXCLUDE",
-      value = "name:datadog-agent"
+      value = "name:datadog-agent name:log_router"
     },
     {
       name  = "DD_TAGS"

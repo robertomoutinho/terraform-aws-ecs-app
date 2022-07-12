@@ -3,6 +3,7 @@ locals {
   ecs_task_definition_family_name = "${var.environment}-${var.name}"
   container_name                  = var.name
   container_image                 = data.external.current_image.result["image_tag"] == "not_found" ? "nginx:latest" : "${var.app_ecr_image_repo}:${data.external.current_image.result["image_tag"]}"
+  # container_image_version         = data.external.current_image.result["image_tag"] == "not_found" ? "latest" : element(split(separator,data.external.current_image.result["image_tag"]),1)
   latest_task_definition          = "${aws_ecs_task_definition.app.family}:${max(aws_ecs_task_definition.app.revision, data.external.current_image.result["task_definition_revision"])}"
 }
 
