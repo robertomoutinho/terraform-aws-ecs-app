@@ -84,7 +84,7 @@ module "container_definition" {
     logDriver = "awsfirelens"
     options = {
       "Name" = "datadog",
-      "dd_service" = var.datadog_servive_name == "" ? var.name : var.datadog_servive_name,
+      "dd_service" = var.datadog_service_name == "" ? var.name : var.datadog_service_name,
       "dd_source" = "firelens",
       "dd_tags" = replace(var.datadog_tags, ",", " "),
       "TLS" = "on",
@@ -115,7 +115,7 @@ module "container_definition" {
 
   docker_labels = (var.enable_datadog_sidecar ? {
     "com.datadoghq.tags.env" = var.environment,
-    "com.datadoghq.tags.service" = var.datadog_servive_name == "" ? var.name : var.datadog_servive_name
+    "com.datadoghq.tags.service" = var.datadog_service_name == "" ? var.name : var.datadog_service_name
   } : null)
 
   environment = var.custom_environment_variables

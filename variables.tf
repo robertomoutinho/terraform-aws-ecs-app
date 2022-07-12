@@ -471,7 +471,7 @@ variable "datadog_firelens_container_image" {
   default     = "amazon/aws-for-fluent-bit:latest"
 }
 
-variable "datadog_servive_name" {
+variable "datadog_service_name" {
   description = "The datadog service name"
   default     = ""
 }
