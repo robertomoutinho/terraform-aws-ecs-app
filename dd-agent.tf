@@ -8,7 +8,7 @@ module "datadog_sidecar" {
 
   port_mappings = [
     {
-      "protocol": "udp",
+      "protocol": "tcp",
       "containerPort": 8125,
       "hostPort": 8125
     },
