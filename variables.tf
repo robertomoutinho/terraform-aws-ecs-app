@@ -377,6 +377,12 @@ variable "app_container_command" {
   default     = null
 }
 
+variable "app_sg_extra_cidr" {
+  type        = list(string)
+  description = "A list of extra cidr blocks to allow ingress traffic to container"
+  default     = []
+}
+
 variable "custom_environment_secrets" {
   description = "List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`)"
   type = list(object(
@@ -398,8 +404,6 @@ variable "custom_environment_variables" {
   ))
   default = []
 }
-
-
 
 ## Service discovery
 variable "enable_service_discovery" {
