@@ -87,7 +87,7 @@ module "container_definition" {
       "Name" = "datadog",
       "dd_service" = var.datadog_service_name == "" ? var.name : var.datadog_service_name,
       "dd_source" = "firelens",
-      "dd_tags" = replace(var.datadog_tags, ",", " "),
+      "dd_tags" = "env:${var.environment}",
       "TLS" = "on",
       "provider" = "ecs"
     }
