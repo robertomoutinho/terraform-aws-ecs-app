@@ -77,17 +77,6 @@ resource "aws_security_group_rule" "ingress_with_self_rule" {
   self              = true
 }
 
-resource "aws_security_group_rule" "service_discovery_ingress_rule" {
-  for_each          = { for name, config in var.app_port_mapping : name => config }
-  security_group_id = aws_security_group.app.id
-  type              = "ingress"
-  cidr_blocks       = [data.aws_vpc.selected.cidr_block]
-  description       = "Service Discovery Ingress"
-  from_port         = each.value.hostPort
-  to_port           = each.value.hostPort
-  protocol          = "tcp"
-}
-
 resource "aws_security_group_rule" "ingress_with_alb_https_security_group_id" {
   for_each                 = { for name, config in var.app_port_mapping : name => config }
   security_group_id        = aws_security_group.app.id
@@ -110,8 +99,19 @@ resource "aws_security_group_rule" "ingress_with_alb_http_security_group_id" {
   protocol                 = "tcp"
 }
 
+resource "aws_security_group_rule" "service_discovery_ingress_rule" {
+  for_each          = var.enable_service_discovery ? { for name, config in var.app_port_mapping : name => config } : {}
+  security_group_id = aws_security_group.app.id
+  type              = "ingress"
+  cidr_blocks       = [data.aws_vpc.selected.cidr_block]
+  description       = "Service Discovery Ingress"
+  from_port         = each.value.hostPort
+  to_port           = each.value.hostPort
+  protocol          = "tcp"
+}
+
 resource "aws_security_group_rule" "allow_extra_cidr" {
-  for_each          = { for name, config in var.app_port_mapping : name => config if var.app_sg_extra_cidr != [] }
+  for_each          = var.app_sg_extra_cidr != [] ? { for name, config in var.app_port_mapping : name => config } : {}
   security_group_id = aws_security_group.app.id
   type              = "ingress"
   cidr_blocks       = var.app_sg_extra_cidr
