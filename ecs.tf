@@ -77,6 +77,7 @@ module "container_definition" {
   container_cpu                = var.ecs_task_cpu
   container_memory             = var.ecs_task_memory
   container_memory_reservation = var.container_memory_reservation
+  linux_parameters             = var.ecs_linux_parameters
 
   port_mappings = var.app_port_mapping
   mount_points  = var.ecs_mount_points

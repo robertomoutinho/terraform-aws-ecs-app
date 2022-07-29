@@ -330,6 +330,31 @@ variable "ecs_efs_volumes" {
   default = []
 }
 
+variable "ecs_linux_parameters" {
+  type = object({
+    capabilities = object({
+      add  = list(string)
+      drop = list(string)
+    })
+    devices = list(object({
+      containerPath = string
+      hostPath      = string
+      permissions   = list(string)
+    }))
+    initProcessEnabled = bool
+    maxSwap            = number
+    sharedMemorySize   = number
+    swappiness         = number
+    tmpfs = list(object({
+      containerPath = string
+      mountOptions  = list(string)
+      size          = number
+    }))
+  })
+  description = "Linux-specific modifications that are applied to the container, such as Linux kernel capabilities. For more details, see https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_LinuxParameters.html"
+  default     = null
+}
+
 variable "container_memory_reservation" {
   description = "The amount of memory (in MiB) to reserve for the container"
   type        = number
