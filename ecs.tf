@@ -35,6 +35,7 @@ resource "aws_ecs_service" "app" {
   launch_type                        = var.ecs_launch_type
   propagate_tags                     = "SERVICE"
   enable_ecs_managed_tags            = true
+  enable_execute_command             = var.ecs_enable_execute_command
   deployment_maximum_percent         = var.ecs_service_deployment_maximum_percent
   deployment_minimum_healthy_percent = var.ecs_service_deployment_minimum_healthy_percent
 

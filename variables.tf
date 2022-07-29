@@ -330,6 +330,12 @@ variable "ecs_efs_volumes" {
   default = []
 }
 
+variable "ecs_enable_execute_command" {
+  description = "Specifies whether to enable Amazon ECS Exec for the tasks within the service"
+  type        = bool
+  default     = false
+}
+
 variable "ecs_linux_parameters" {
   type = object({
     capabilities = object({
