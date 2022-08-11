@@ -6,7 +6,7 @@ module "alb" {
 
   count   = var.enable_alb ? 1 : 0
   source  = "terraform-aws-modules/alb/aws"
-  version = "v5.13.0"
+  version = "5.16.0"
 
   name     = "${var.environment}-${var.name}"
   internal = var.alb_internal
