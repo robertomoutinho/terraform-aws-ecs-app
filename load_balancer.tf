@@ -64,6 +64,10 @@ module "alb" {
       }
     },
   ]
+  
+  lifecycle {
+    create_before_destroy = false
+  }
 
   tags = local.local_tags
 
