@@ -503,7 +503,7 @@ variable "datadog_agent_container_image" {
 
 variable "datadog_firelens_container_image" {
   description = "The datadog firelens sidecar container image"
-  default     = "amazon/aws-for-fluent-bit:latest"
+  default     = "amazon/aws-for-fluent-bit:stable"
 }
 
 variable "datadog_service_name" {
