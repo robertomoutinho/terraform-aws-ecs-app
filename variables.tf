@@ -486,24 +486,26 @@ variable "enable_datadog_log_forwarder" {
   default     = false
 }
 
-# variable "datadog_log_forwarder_type" {
-#   description = "The method to ship container logs to Datadog (either using CLOUDWATCH or FIRELENS)"
-#   type        = string
-#   default     = "CLOUDWATCH"
-#   validation {
-#     condition     = contains(["CLOUDWATCH", "FIRELENS"], var.datadog_log_forwarder_type)
-#     error_message = "Allowed values for input_parameter are \"CLOUDWATCH\" or \"FIRELENS\"."
-#   }
-# }
-
 variable "datadog_agent_container_image" {
   description = "The datadog agent sidecar container image"
   default     = "datadog/agent:latest"
 }
 
+variable "datadog_agent_container_essential" {
+  description = "Determines whether all other containers in a task are stopped, if this container fails or stops for any reason"
+  type        = bool
+  default     = false
+}
+
 variable "datadog_firelens_container_image" {
   description = "The datadog firelens sidecar container image"
   default     = "amazon/aws-for-fluent-bit:stable"
+}
+
+variable "datadog_firelens_container_essential" {
+  description = "Determines whether all other containers in a task are stopped, if this container fails or stops for any reason"
+  type        = bool
+  default     = false
 }
 
 variable "datadog_service_name" {

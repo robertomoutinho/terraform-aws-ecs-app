@@ -25,9 +25,9 @@ resource "aws_iam_role" "ecs_task_execution" {
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
-  count       = var.create_default_role ? length(var.policies_arn) : 0
-  role        = aws_iam_role.ecs_task_execution[0].id
-  policy_arn  = element(var.policies_arn, count.index)
+  count      = var.create_default_role ? length(var.policies_arn) : 0
+  role       = aws_iam_role.ecs_task_execution[0].id
+  policy_arn = element(var.policies_arn, count.index)
 }
 
 ###################
@@ -53,10 +53,10 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
 }
 
 resource "aws_iam_role_policy" "ecs_task_access_secrets" {
-  count   = var.create_default_role ? 1 : 0
-  name    = "ECSTaskAccessSecretsPolicy"
-  role    = aws_iam_role.ecs_task_execution[0].id
-  policy  = element(
+  count = var.create_default_role ? 1 : 0
+  name  = "ECSTaskAccessSecretsPolicy"
+  role  = aws_iam_role.ecs_task_execution[0].id
+  policy = element(
     compact(
       concat(
         data.aws_iam_policy_document.ecs_task_access_secrets.*.json,
@@ -83,10 +83,10 @@ data "aws_iam_policy_document" "ecs_task_access_backend" {
 }
 
 resource "aws_iam_role_policy" "ecs_task_access_backend" {
-  count   = var.create_default_role ? 1 : 0
-  name    = "ECSTaskAccessBackendPolicy"
-  role    = aws_iam_role.ecs_task_execution[0].id
-  policy  = element(
+  count = var.create_default_role ? 1 : 0
+  name  = "ECSTaskAccessBackendPolicy"
+  role  = aws_iam_role.ecs_task_execution[0].id
+  policy = element(
     compact(
       concat(
         data.aws_iam_policy_document.ecs_task_access_backend.*.json,

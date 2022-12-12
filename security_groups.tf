@@ -111,7 +111,7 @@ resource "aws_security_group_rule" "service_discovery_ingress_rule" {
 }
 
 resource "aws_security_group_rule" "allow_extra_cidr" {
-  for_each          = var.app_sg_extra_cidr != [] ? { for name, config in var.app_port_mapping : name => config } : {}
+  for_each          = length(var.app_sg_extra_cidr) != 0 ? { for name, config in var.app_port_mapping : name => config } : {}
   security_group_id = aws_security_group.app.id
   type              = "ingress"
   cidr_blocks       = var.app_sg_extra_cidr
