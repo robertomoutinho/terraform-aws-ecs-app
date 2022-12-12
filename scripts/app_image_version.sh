@@ -86,10 +86,10 @@ if [[ ${taskDefinitionID:0:3} == 'arn' ]]; then {
         --arg accountId $account_id \
         '{task_arn: $task_arn, image_tag: $imageTag, task_definition_revision: $taskDefinitionRevision, region: $region, service: $service, cluster: $cluster, accountId: $accountId}'
   
-  # aws config file cleanup
-  aws configure set region "removeme" --profile $profile_name
-  sed -i "" "/^\[profile $profile_name\]/s/.*//" ~/.aws/config
-  sed -i "" "/^region = removeme/s/.*//" ~/.aws/config
+  # aws config file cleanup (TODO)
+  # aws configure set region "removeme" --profile $profile_name
+  # sed -i "" "/^\[profile $profile_name\]/s/.*//" ~/.aws/config
+  # sed -i "" "/^region = removeme/s/.*//" ~/.aws/config
 
   exit 0
 }
