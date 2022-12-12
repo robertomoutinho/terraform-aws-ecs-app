@@ -4,7 +4,7 @@ locals {
   container_name                  = var.name
   container_image                 = data.external.current_image.result["image_tag"] == "not_found" ? "nginx:latest" : "${var.app_ecr_image_repo}:${data.external.current_image.result["image_tag"]}"
   # container_image_version         = data.external.current_image.result["image_tag"] == "not_found" ? "latest" : element(split(separator,data.external.current_image.result["image_tag"]),1)
-  latest_task_definition          = "${aws_ecs_task_definition.app.family}:${max(aws_ecs_task_definition.app.revision, data.external.current_image.result["task_definition_revision"])}"
+  latest_task_definition = "${aws_ecs_task_definition.app.family}:${max(aws_ecs_task_definition.app.revision, data.external.current_image.result["task_definition_revision"])}"
 }
 
 data "aws_ecs_cluster" "cluster" {
@@ -86,12 +86,12 @@ module "container_definition" {
   log_configuration = (var.enable_datadog_log_forwarder ? {
     logDriver = "awsfirelens"
     options = {
-      "Name" = "datadog",
+      "Name"       = "datadog",
       "dd_service" = var.datadog_service_name == "" ? var.name : var.datadog_service_name,
-      "dd_source" = "firelens",
-      "dd_tags" = "env:${var.environment}",
-      "TLS" = "on",
-      "provider" = "ecs"
+      "dd_source"  = "firelens",
+      "dd_tags"    = "env:${var.environment}",
+      "TLS"        = "on",
+      "provider"   = "ecs"
     }
     secretOptions = [
       {
@@ -99,7 +99,7 @@ module "container_definition" {
         valueFrom = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment}/shared/datadog/api_key"
       }
     ]
-  } : {
+    } : {
     logDriver = "awslogs"
     options = {
       awslogs-region        = data.aws_region.current.name
@@ -117,7 +117,7 @@ module "container_definition" {
   ] : null)
 
   docker_labels = (var.enable_datadog_sidecar ? {
-    "com.datadoghq.tags.env" = var.environment,
+    "com.datadoghq.tags.env"     = var.environment,
     "com.datadoghq.tags.service" = var.datadog_service_name == "" ? var.name : var.datadog_service_name
   } : null)
 
@@ -136,12 +136,12 @@ resource "aws_ecs_task_definition" "app" {
   cpu                      = var.ecs_task_cpu
   memory                   = var.ecs_task_memory
 
-  container_definitions    = ( 
+  container_definitions = (
     var.enable_datadog_sidecar && var.enable_datadog_log_forwarder
-      ? jsonencode([module.container_definition.json_map_object, module.datadog_sidecar.json_map_object, module.datadog_firelens.json_map_object ]) 
-      : var.enable_datadog_sidecar
-      ? jsonencode([module.container_definition.json_map_object, module.datadog_sidecar.json_map_object ]) 
-      : module.container_definition.json_map_encoded_list
+    ? jsonencode([module.container_definition.json_map_object, module.datadog_sidecar.json_map_object, module.datadog_firelens.json_map_object])
+    : var.enable_datadog_sidecar
+    ? jsonencode([module.container_definition.json_map_object, module.datadog_sidecar.json_map_object])
+    : module.container_definition.json_map_encoded_list
   )
 
   dynamic "volume" {

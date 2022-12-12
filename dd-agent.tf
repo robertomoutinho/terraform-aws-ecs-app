@@ -5,17 +5,18 @@ module "datadog_sidecar" {
 
   container_name  = "datadog-agent"
   container_image = var.datadog_agent_container_image
+  essential       = var.datadog_agent_container_essential
 
   port_mappings = [
     {
-      "protocol": "tcp",
-      "containerPort": 8125,
-      "hostPort": 8125
+      "protocol" : "tcp",
+      "containerPort" : 8125,
+      "hostPort" : 8125
     },
     {
-      "protocol": "tcp",
-      "containerPort": 8126,
-      "hostPort": 8126
+      "protocol" : "tcp",
+      "containerPort" : 8126,
+      "hostPort" : 8126
     }
   ]
 
@@ -53,7 +54,7 @@ module "datadog_sidecar" {
       value = replace(var.datadog_tags, ",", " ")
     },
   ]
-  
+
   secrets = [
     {
       name      = "DD_API_KEY"
