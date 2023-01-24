@@ -289,6 +289,12 @@ variable "ecs_task_memory" {
   default     = 512
 }
 
+variable "ecs_ephemeral_storage_size" {
+  description = "The size (in GiB) of storage available to the task"
+  type        = number
+  default     = 40
+}
+
 variable "ecs_ulimits" {
   type = list(object({
     name      = string

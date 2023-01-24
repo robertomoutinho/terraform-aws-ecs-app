@@ -136,6 +136,10 @@ resource "aws_ecs_task_definition" "app" {
   cpu                      = var.ecs_task_cpu
   memory                   = var.ecs_task_memory
 
+  ephemeral_storage {
+    size_in_gib = var.ecs_ephemeral_storage_size
+  }
+
   container_definitions = (
     var.enable_datadog_sidecar && var.enable_datadog_log_forwarder
     ? jsonencode([module.container_definition.json_map_object, module.datadog_sidecar.json_map_object, module.datadog_firelens.json_map_object])
