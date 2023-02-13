@@ -37,10 +37,10 @@ export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq -r .Credentials.SecretAccess
 export AWS_SESSION_TOKEN=$(echo $temp_role | jq -r .Credentials.SessionToken)
 export AWS_REGION=$region
 
-# Force AWS config file creation if it doesn't exist
-aws configure set default.region 'us-east-1'
-aws configure set aws_access_key_id 'CHANGEME' --region $region
-aws configure set aws_secret_access_key 'CHANGEME' --region $region
+# Force AWS config/cred file creation if it doesn't exist
+touch "$AWS_CONFIG_FILE"
+touch "$AWS_SHARED_CREDENTIALS_FILE"
+
 
 # Set AWS Config
 {
