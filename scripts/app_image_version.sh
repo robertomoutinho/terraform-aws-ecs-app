@@ -12,6 +12,8 @@ set -e
 eval "$(jq -r '@sh "role_arn=\(.role_arn) service=\(.service) cluster=\(.cluster) path_root=\(.path_root) account_id=\(.account_id) region=\(.region)"')"
 
 # Assume the account role before executing the script
+AWS_CONFIG_FILE=~/.aws/config
+AWS_SHARED_CREDENTIALS_FILE=~/.aws/credentials
 role_session_name="ecs-$service"
 profile_name="ecs-$service"
 
