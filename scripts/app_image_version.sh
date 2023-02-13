@@ -97,20 +97,8 @@ if [[ ${taskDefinitionID:0:3} == 'arn' ]]; then {
         '{task_arn: $task_arn, image_tag: $imageTag, task_definition_revision: $taskDefinitionRevision, region: $region, service: $service, cluster: $cluster, accountId: $accountId}'
   
   # AWS config + credentials file cleanup
-  tmp_aws_config="$(mktemp)"
-
-  awk 'NF' "${AWS_CONFIG_FILE}" | sed -e '/^\['"$profile_name"'\]$/,/^\[/{//!d;}' -e '/^\['"$profile_name"'\]$/{d;}' \
-      | sed -e '/^\[profile '"$profile_name"'\]$/,/^\[/{//!d;}' -e '/^\[profile '"$profile_name"'\]$/{d;}' > "$tmp_aws_config"
-  mv "$tmp_aws_config" "${AWS_CONFIG_FILE}"
-
-  awk 'NF' "${AWS_SHARED_CREDENTIALS_FILE}" \
-      | sed -e '/^\['"$profile_name"'\]$/,/^\[/{//!d;}' -e '/^\['"$profile_name"'\]$/{d;}' > "$tmp_aws_config"
-  mv "$tmp_aws_config" "${AWS_SHARED_CREDENTIALS_FILE}"
-
-  unset AWS_PROFILE
-  unset AWS_ACCESS_KEY_ID
-  unset AWS_SECRET_ACCESS_KEY
-  unset AWS_SESSION_TOKEN
+  sed -i '' -e '/\[profile ${profile_name}\]/{N;d;}' ~/.aws/config # Delete 2 lines including SED match
+  sed -i '' -e '/\[${profile_name}\]/{N;N;N;d;}' ~/.aws/credentials # Delete 4 lines including SED match
 
   exit 0
 }
