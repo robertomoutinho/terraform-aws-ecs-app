@@ -2,8 +2,8 @@
 
 remove_aws_config () {
   # AWS config + credentials file cleanup
-  sed -i '' -e '/\[profile $1\]/{N;d;}' ~/.aws/config # Delete 2 lines including SED match
-  sed -i '' -e '/\[$1\]/{N;N;N;d;}' ~/.aws/credentials # Delete 4 lines including SED match
+  sed -i "" -e "/\[profile $1\]/{N;d;}" ~/.aws/config # Delete 2 lines including SED match
+  sed -i "" -e "/\[$1\]/{N;N;N;d;}" ~/.aws/credentials # Delete 4 lines including SED match
 }
 
 # This script retrieves the container image and task definition revision
