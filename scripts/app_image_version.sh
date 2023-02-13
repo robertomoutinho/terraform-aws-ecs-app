@@ -38,6 +38,7 @@ export AWS_SESSION_TOKEN=$(echo $temp_role | jq -r .Credentials.SessionToken)
 export AWS_REGION=$region
 
 # Force AWS config/cred file creation if it doesn't exist
+mkdir -p ~/.aws/
 touch "$AWS_CONFIG_FILE"
 touch "$AWS_SHARED_CREDENTIALS_FILE"
 
