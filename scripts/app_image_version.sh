@@ -1,5 +1,11 @@
 #!/bin/bash
 
+remove_aws_config () {
+  # AWS config + credentials file cleanup
+  sed -i '' -e '/\[profile $1\]/{N;d;}' ~/.aws/config # Delete 2 lines including SED match
+  sed -i '' -e '/\[$1\]/{N;N;N;d;}' ~/.aws/credentials # Delete 4 lines including SED match
+}
+
 # This script retrieves the container image and task definition revision
 # for a given cluster+service. If it can't retrieve it, assume
 # this is the initial deployment and default to "not_found".
@@ -53,6 +59,7 @@ if [[ ${taskDefinitionID:0:3} == 'arn' ]]; then {
   containerImage="$(echo "$taskDefinition" | jq -r '.taskDefinition.containerDefinitions[0].image')"
   imageTag="$(echo "$containerImage" | awk -F':' '{print $2}')"
   jq -n --arg taskArn $taskDefinitionID --arg imageTag $imageTag --arg taskDefinitionRevision $taskDefinitionRevision '{task_arn: $taskArn, image_tag: $imageTag, task_definition_revision: $taskDefinitionRevision}'
+  remove_aws_config $profile_name
   if [ $? -eq 0 ]; then
     exit 0
   else
@@ -73,6 +80,7 @@ if [[ ${taskDefinitionID:0:3} == 'arn' ]]; then {
         containerImage="$(echo "$taskDefinition" | jq -r '.taskDefinition.containerDefinitions[0].image')"
         imageTag="$(echo "$containerImage" | awk -F':' '{print $2}')"
         jq -n --arg taskArn $jobTaskDefinitionID --arg imageTag $imageTag --arg taskDefinitionRevision $taskDefinitionRevision '{task_arn: $taskArn, image_tag: $imageTag, task_definition_revision: $taskDefinitionRevision}'
+        remove_aws_config $profile_name
         if [ $? -eq 0 ]; then
           exit 0
         else
@@ -96,10 +104,7 @@ if [[ ${taskDefinitionID:0:3} == 'arn' ]]; then {
         --arg accountId $account_id \
         '{task_arn: $task_arn, image_tag: $imageTag, task_definition_revision: $taskDefinitionRevision, region: $region, service: $service, cluster: $cluster, accountId: $accountId}'
   
-  # AWS config + credentials file cleanup
-  sed -i '' -e '/\[profile ${profile_name}\]/{N;d;}' ~/.aws/config # Delete 2 lines including SED match
-  sed -i '' -e '/\[${profile_name}\]/{N;N;N;d;}' ~/.aws/credentials # Delete 4 lines including SED match
-
+  remove_aws_config $profile_name
   exit 0
 }
 fi
