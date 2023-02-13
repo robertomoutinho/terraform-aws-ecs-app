@@ -24,11 +24,19 @@ export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq -r .Credentials.SecretAccess
 export AWS_SESSION_TOKEN=$(echo $temp_role | jq -r .Credentials.SessionToken)
 export AWS_REGION=$region
 
-aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID --region $region --profile $profile_name
-aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY --region $region --profile $profile_name
-aws configure set aws_session_token $AWS_SESSION_TOKEN --region $region --profile $profile_name
-aws configure set region $region --region $region --profile $profile_name
-aws configure set default.region $region
+# Set AWS Config
+{
+  printf '\n%s\n' "[profile ${profile_name}]"
+  printf '%s\n' "region = ${region}"
+} >> "$AWS_CONFIG_FILE"
+
+# Set AWS Credentials
+{
+  printf '\n%s\n' "[${profile_name}]"
+  printf '%s\n' "aws_access_key_id = $AWS_ACCESS_KEY_ID"
+  printf '%s\n' "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
+  printf '%s\n' "aws_session_token = $AWS_SESSION_TOKEN"
+} >> "$AWS_SHARED_CREDENTIALS_FILE"
 
 # Remove extra quotes and backslashes from jsonencoding path_root in terraform
 path_root="$(echo $path_root | sed -e 's/^"//' -e 's/"$//' -e 's/\\\\/\\/g')"
@@ -86,10 +94,21 @@ if [[ ${taskDefinitionID:0:3} == 'arn' ]]; then {
         --arg accountId $account_id \
         '{task_arn: $task_arn, image_tag: $imageTag, task_definition_revision: $taskDefinitionRevision, region: $region, service: $service, cluster: $cluster, accountId: $accountId}'
   
-  # aws config file cleanup (TODO)
-  # aws configure set region "removeme" --profile $profile_name
-  # sed -i "" "/^\[profile $profile_name\]/s/.*//" ~/.aws/config
-  # sed -i "" "/^region = removeme/s/.*//" ~/.aws/config
+  # AWS config + credentials file cleanup
+  tmp_aws_config="$(mktemp)"
+
+  awk 'NF' "${AWS_CONFIG_FILE}" | sed -e '/^\['"$profile_name"'\]$/,/^\[/{//!d;}' -e '/^\['"$profile_name"'\]$/{d;}' \
+      | sed -e '/^\[profile '"$profile_name"'\]$/,/^\[/{//!d;}' -e '/^\[profile '"$profile_name"'\]$/{d;}' > "$tmp_aws_config"
+  mv "$tmp_aws_config" "${AWS_CONFIG_FILE}"
+
+  awk 'NF' "${AWS_SHARED_CREDENTIALS_FILE}" \
+      | sed -e '/^\['"$profile_name"'\]$/,/^\[/{//!d;}' -e '/^\['"$profile_name"'\]$/{d;}' > "$tmp_aws_config"
+  mv "$tmp_aws_config" "${AWS_SHARED_CREDENTIALS_FILE}"
+
+  unset AWS_PROFILE
+  unset AWS_ACCESS_KEY_ID
+  unset AWS_SECRET_ACCESS_KEY
+  unset AWS_SESSION_TOKEN
 
   exit 0
 }
