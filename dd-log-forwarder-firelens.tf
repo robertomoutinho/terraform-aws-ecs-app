@@ -9,7 +9,11 @@ module "datadog_firelens" {
 
   firelens_configuration = {
     type    = "fluentbit",
-    options = { "enable-ecs-log-metadata" = "true" }
+    options = { 
+      "enable-ecs-log-metadata" = "true",
+      "config-file-type": "file",
+      "config-file-value": "/fluent-bit/configs/parse-json.conf" 
+    }
   }
 
 }
