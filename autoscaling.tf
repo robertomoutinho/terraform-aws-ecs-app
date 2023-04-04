@@ -91,7 +91,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_low" {
   metric_name         = "CPUUtilization"
   namespace           = "AWS/ECS"
   period              = var.asg_min_cpu_period
-  statistic           = "Average"
+  statistic           = "Maximum"
   threshold           = var.asg_threshold_cpu_to_scale_down
   dimensions = {
     ClusterName = var.ecs_cluster_name
