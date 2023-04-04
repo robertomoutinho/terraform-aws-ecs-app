@@ -54,7 +54,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   threshold           = var.asg_threshold_cpu_to_scale_up
   dimensions = {
     ClusterName = var.ecs_cluster_name
-    ServiceName = var.ecs_service_name
+    ServiceName = aws_ecs_service.app.name
   }
   alarm_actions = [aws_appautoscaling_policy.scale_up_policy[0].arn]
 
@@ -95,7 +95,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_low" {
   threshold           = var.asg_threshold_cpu_to_scale_down
   dimensions = {
     ClusterName = var.ecs_cluster_name
-    ServiceName = var.ecs_service_name
+    ServiceName = aws_ecs_service.app.name
   }
   alarm_actions = [aws_appautoscaling_policy.scale_down_policy[0].arn]
 
