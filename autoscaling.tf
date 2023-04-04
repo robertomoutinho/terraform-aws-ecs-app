@@ -38,9 +38,9 @@ resource "aws_appautoscaling_target" "target" {
 
 # }
 
-##################################################
-## AWS Auto Scaling - CloudWatch Alarm CPU High ##
-##################################################
+###################################
+## AWS Auto Scaling - Scaling Up ##
+###################################
 
 resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   count               = var.enable_asg ? 1 : 0
@@ -56,37 +56,10 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
     ClusterName = var.ecs_cluster_name
     ServiceName = var.ecs_service_name
   }
-  alarm_actions = [aws_appautoscaling_policy.scale_up_policy.arn]
+  alarm_actions = [aws_appautoscaling_policy.scale_up_policy[0].arn]
 
   tags = var.tags
 }
-
-#################################################
-## AWS Auto Scaling - CloudWatch Alarm CPU Low ##
-#################################################
-
-resource "aws_cloudwatch_metric_alarm" "cpu_low" {
-  count               = var.enable_asg ? 1 : 0
-  alarm_name          = "${var.environment}-${var.name}-cpu-low"
-  comparison_operator = "LessThanOrEqualToThreshold"
-  evaluation_periods  = var.asg_min_cpu_evaluation_period
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/ECS"
-  period              = var.asg_min_cpu_period
-  statistic           = "Average"
-  threshold           = var.asg_threshold_cpu_to_scale_down
-  dimensions = {
-    ClusterName = var.ecs_cluster_name
-    ServiceName = var.ecs_service_name
-  }
-  alarm_actions = [aws_appautoscaling_policy.scale_down_policy.arn]
-
-  tags = var.tags
-}
-
-##########################################
-## AWS Auto Scaling - Scaling Up Policy ##
-##########################################
 
 resource "aws_appautoscaling_policy" "scale_up_policy" {
   count              = var.enable_asg ? 1 : 0
@@ -106,9 +79,28 @@ resource "aws_appautoscaling_policy" "scale_up_policy" {
   depends_on = [aws_appautoscaling_target.target]
 }
 
-############################################
-## AWS Auto Scaling - Scaling Down Policy ##
-############################################
+#####################################
+## AWS Auto Scaling - Scaling Down ##
+#####################################
+
+resource "aws_cloudwatch_metric_alarm" "cpu_low" {
+  count               = var.enable_asg ? 1 : 0
+  alarm_name          = "${var.environment}-${var.name}-cpu-low"
+  comparison_operator = "LessThanOrEqualToThreshold"
+  evaluation_periods  = var.asg_min_cpu_evaluation_period
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/ECS"
+  period              = var.asg_min_cpu_period
+  statistic           = "Average"
+  threshold           = var.asg_threshold_cpu_to_scale_down
+  dimensions = {
+    ClusterName = var.ecs_cluster_name
+    ServiceName = var.ecs_service_name
+  }
+  alarm_actions = [aws_appautoscaling_policy.scale_down_policy[0].arn]
+
+  tags = var.tags
+}
 
 resource "aws_appautoscaling_policy" "scale_down_policy" {
   count              = var.enable_asg ? 1 : 0
