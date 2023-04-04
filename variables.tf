@@ -190,6 +190,29 @@ variable "asg_cooldown_to_scale_down_again" {
   default     = 300
 }
 
+variable "asg_max_cpu_evaluation_period" {
+  description = "The number of periods over which data is compared to the specified threshold for max cpu metric alarm"
+  default     = "3"
+  type        = string
+}
+
+variable "asg_min_cpu_evaluation_period" {
+  description = "The number of periods over which data is compared to the specified threshold for min cpu metric alarm"
+  default     = "3"
+  type        = string
+}
+
+variable "asg_max_cpu_period" {
+  description = "The period in seconds over which the specified statistic is applied for max cpu metric alarm"
+  default     = "60"
+  type        = string
+}
+variable "asg_min_cpu_period" {
+  description = "The period in seconds over which the specified statistic is applied for min cpu metric alarm"
+  default     = "60"
+  type        = string
+}
+
 # ACM
 variable "certificate_arn" {
   description = "ARN of certificate issued by AWS ACM."

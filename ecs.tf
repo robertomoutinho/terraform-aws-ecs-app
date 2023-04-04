@@ -63,6 +63,11 @@ resource "aws_ecs_service" "app" {
   }
 
   tags = local.local_tags
+
+  lifecycle {
+    ignore_changes = [desired_count]
+  }
+
 }
 
 module "container_definition" {
