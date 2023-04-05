@@ -367,6 +367,12 @@ variable "ecs_linux_parameters" {
   default     = null
 }
 
+variable "ecs_stop_timeout" {
+  type        = number
+  description = "Time duration (in seconds) to wait before the container is forcefully killed if it doesn't exit normally on its own"
+  default     = 60
+}
+
 variable "container_memory_reservation" {
   description = "The amount of memory (in MiB) to reserve for the container"
   type        = number

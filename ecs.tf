@@ -74,6 +74,7 @@ module "container_definition" {
   command         = var.app_container_command
   ulimits         = var.ecs_ulimits
   pseudo_terminal = var.ecs_pseudo_terminal
+  stop_timeout    = var.ecs_stop_timeout
 
   container_cpu                = var.ecs_task_cpu
   container_memory             = var.ecs_task_memory
