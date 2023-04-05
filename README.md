@@ -41,12 +41,9 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 
 | Name | Type |
 |------|------|
-| [aws_appautoscaling_policy.scale_down_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
-| [aws_appautoscaling_policy.scale_up_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
+| [aws_appautoscaling_policy.auto_scaling](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
 | [aws_appautoscaling_target.target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_target) | resource |
 | [aws_cloudwatch_log_group.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
-| [aws_cloudwatch_metric_alarm.cpu_high](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
-| [aws_cloudwatch_metric_alarm.cpu_low](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_ecs_service.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service) | resource |
 | [aws_ecs_task_definition.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition) | resource |
 | [aws_iam_role.ecs_task_execution](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
@@ -97,11 +94,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_asg_cooldown_to_scale_down_again"></a> [asg\_cooldown\_to\_scale\_down\_again](#input\_asg\_cooldown\_to\_scale\_down\_again) | The amount of time, in seconds, after a scaling activity completes and before the next scaling down activity can start. | `number` | `300` | no |
 | <a name="input_asg_cooldown_to_scale_up_again"></a> [asg\_cooldown\_to\_scale\_up\_again](#input\_asg\_cooldown\_to\_scale\_up\_again) | The amount of time, in seconds, after a scaling activity completes and before the next scaling up activity can start. | `number` | `60` | no |
 | <a name="input_asg_evaluation_periods"></a> [asg\_evaluation\_periods](#input\_asg\_evaluation\_periods) | The number of periods over which data is compared to the specified threshold. | `number` | `5` | no |
-| <a name="input_asg_max_cpu_evaluation_period"></a> [asg\_max\_cpu\_evaluation\_period](#input\_asg\_max\_cpu\_evaluation\_period) | The number of periods over which data is compared to the specified threshold for max cpu metric alarm | `string` | `"3"` | no |
-| <a name="input_asg_max_cpu_period"></a> [asg\_max\_cpu\_period](#input\_asg\_max\_cpu\_period) | The period in seconds over which the specified statistic is applied for max cpu metric alarm | `string` | `"60"` | no |
 | <a name="input_asg_max_tasks"></a> [asg\_max\_tasks](#input\_asg\_max\_tasks) | The amount of maximum tasks | `number` | `3` | no |
-| <a name="input_asg_min_cpu_evaluation_period"></a> [asg\_min\_cpu\_evaluation\_period](#input\_asg\_min\_cpu\_evaluation\_period) | The number of periods over which data is compared to the specified threshold for min cpu metric alarm | `string` | `"3"` | no |
-| <a name="input_asg_min_cpu_period"></a> [asg\_min\_cpu\_period](#input\_asg\_min\_cpu\_period) | The period in seconds over which the specified statistic is applied for min cpu metric alarm | `string` | `"60"` | no |
 | <a name="input_asg_min_tasks"></a> [asg\_min\_tasks](#input\_asg\_min\_tasks) | The amount of minimum tasks | `number` | `1` | no |
 | <a name="input_asg_period"></a> [asg\_period](#input\_asg\_period) | The period in seconds over which the specified statistic is applied | `number` | `60` | no |
 | <a name="input_asg_threshold_cpu_to_scale_down"></a> [asg\_threshold\_cpu\_to\_scale\_down](#input\_asg\_threshold\_cpu\_to\_scale\_down) | The value against which the specified statistic is compared. | `number` | `40` | no |
