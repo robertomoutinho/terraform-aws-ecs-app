@@ -8,6 +8,11 @@ output "vpc_id" {
   value       = var.vpc_id
 }
 
+output "alb_id" {
+  description = "The ID and ARN of the load balancer we created"
+  value       = try(module.alb.0.this_lb_id, null)
+}
+
 output "alb_dns_name" {
   description = "Dns name of alb"
   value       = try(module.alb.0.this_lb_dns_name, null)
@@ -16,6 +21,16 @@ output "alb_dns_name" {
 output "alb_zone_id" {
   description = "Zone ID of alb"
   value       = try(module.alb.0.this_lb_zone_id, null)
+}
+
+output "alb_https_tcp_listener_arns" {
+  description = "The ARNs of the HTTPS load balancer listeners created."
+  value       = try(module.alb.0.https_listener_arns, null)
+}
+
+output "alb_target_group_arns" {
+  description = "ARNs of the target groups. Useful for passing to your Auto Scaling group."
+  value       = try(module.alb.0.target_group_arns, null)
 }
 
 output "ecs_task_definition" {

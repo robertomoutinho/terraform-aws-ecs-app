@@ -163,6 +163,9 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | Name | Description |
 |------|-------------|
 | <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | Dns name of alb |
+| <a name="output_alb_https_tcp_listener_arns"></a> [alb\_https\_tcp\_listener\_arns](#output\_alb\_https\_tcp\_listener\_arns) | The ARNs of the HTTPS load balancer listeners created. |
+| <a name="output_alb_id"></a> [alb\_id](#output\_alb\_id) | The ID and ARN of the load balancer we created |
+| <a name="output_alb_target_group_arns"></a> [alb\_target\_group\_arns](#output\_alb\_target\_group\_arns) | ARNs of the target groups. Useful for passing to your Auto Scaling group. |
 | <a name="output_alb_zone_id"></a> [alb\_zone\_id](#output\_alb\_zone\_id) | Zone ID of alb |
 | <a name="output_cloudwatch_group_name"></a> [cloudwatch\_group\_name](#output\_cloudwatch\_group\_name) | The AWS cloudwatch group name |
 | <a name="output_ecs_security_group"></a> [ecs\_security\_group](#output\_ecs\_security\_group) | Security group assigned to ECS Service in network configuration |
