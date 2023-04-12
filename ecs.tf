@@ -62,6 +62,15 @@ resource "aws_ecs_service" "app" {
     }
   }
 
+  dynamic "load_balancer" {
+    for_each = var.alb_extra_target_groups
+    content {
+      container_name   = local.container_name
+      container_port   = var.app_port_mapping.0.containerPort
+      target_group_arn = load_balancer.value
+    }
+  }
+
   tags = local.local_tags
 
   lifecycle {

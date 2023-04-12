@@ -99,6 +99,12 @@ variable "alb_extra_security_group_ids" {
   default     = []
 }
 
+variable "alb_extra_target_groups" {
+  description = "List of one or more target groups to be added to the load balancer"
+  type        = list(string)
+  default     = []
+}
+
 variable "health_check_interval" {
   description = "Healthcheck interval"
   type        = number
