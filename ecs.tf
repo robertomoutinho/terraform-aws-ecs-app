@@ -45,6 +45,11 @@ resource "aws_ecs_service" "app" {
     assign_public_ip = var.ecs_service_assign_public_ip
   }
 
+  capacity_provider_strategy {
+    capacity_provider = var.ecs_capacity_provider
+    weight            = 1
+  }
+
   dynamic "service_registries" {
     for_each = aws_service_discovery_service.sds
     content {
