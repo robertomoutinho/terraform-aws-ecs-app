@@ -28,11 +28,11 @@ data "external" "current_image" {
 #########
 
 resource "aws_ecs_service" "app" {
-  name                               = local.ecs_service_name
-  cluster                            = data.aws_ecs_cluster.cluster.arn
-  task_definition                    = "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:task-definition/${local.latest_task_definition}"
-  desired_count                      = var.ecs_service_desired_count
-  launch_type                        = var.ecs_launch_type
+  name            = local.ecs_service_name
+  cluster         = data.aws_ecs_cluster.cluster.arn
+  task_definition = "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:task-definition/${local.latest_task_definition}"
+  desired_count   = var.ecs_service_desired_count
+  # launch_type                        = var.ecs_launch_type
   propagate_tags                     = "SERVICE"
   enable_ecs_managed_tags            = true
   enable_execute_command             = var.ecs_enable_execute_command

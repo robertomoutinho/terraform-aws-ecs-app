@@ -253,11 +253,11 @@ variable "ecs_cluster_name" {
   description = "The ECS cluster Name"
 }
 
-variable "ecs_launch_type" {
-  description = "The ECS cluster Name"
-  type        = string
-  default     = "FARGATE"
-}
+# variable "ecs_launch_type" {
+#   description = "The ECS cluster Name"
+#   type        = string
+#   default     = "FARGATE"
+# }
 
 variable "ecs_capacity_provider" {
   description = "Short name of the capacity provider"
