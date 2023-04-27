@@ -141,8 +141,15 @@ module "container_definition" {
     "com.datadoghq.tags.service" = var.datadog_service_name == "" ? var.name : var.datadog_service_name
   } : null)
 
-  environment = var.custom_environment_variables
-  secrets     = var.custom_environment_secrets
+  environment = var.enable_datadog_sidecar ? flatten(concat(var.custom_environment_variables,
+    [
+      {
+        name  = "DD_VERSION"
+        value = data.external.current_image.result["image_tag"]
+      }
+    ]
+  )) : var.custom_environment_variables
+  secrets = var.custom_environment_secrets
 
 }
 
