@@ -3,11 +3,11 @@
 remove_aws_config () {
   # AWS config + credentials file cleanup
   if [[ "$OSTYPE" == "darwin"* ]]; then
-    sed -i "" -e "/\[profile $1\]/{N;d;}" ~/.aws/config # Delete 2 lines including SED match
-    sed -i "" -e "/\[$1\]/{N;N;N;d;}" ~/.aws/credentials # Delete 4 lines including SED match
+    flock -x -w 5 -n ~/.aws/config.lock sed -i "" -e "/\[profile $1\]/{N;d;}" ~/.aws/config # Delete 2 lines including SED match
+    flock -x -w 5 -n ~/.aws/credentials.lock sed -i "" -e "/\[$1\]/{N;N;N;d;}" ~/.aws/credentials # Delete 4 lines including SED match
   else
-    sed -i -e "/\[profile $1\]/{N;d;}" ~/.aws/config
-    sed -i -e "/\[$1\]/{N;N;N;d;}" ~/.aws/credentials
+    flock -x -w 5 -n ~/.aws/config.lock sed -i -e "/\[profile $1\]/{N;d;}" ~/.aws/config
+    flock -x -w 5 -n ~/.aws/credentials.lock sed -i -e "/\[$1\]/{N;N;N;d;}" ~/.aws/credentials
   fi
 }
 
@@ -42,15 +42,16 @@ mkdir -p ~/.aws/
 touch "$AWS_CONFIG_FILE"
 touch "$AWS_SHARED_CREDENTIALS_FILE"
 
-
 # Set AWS Config
 {
+  printf '\n'
   printf '%s\n' "[profile ${profile_name}]"
   printf '%s\n' "region = ${region}"
 } >> "$AWS_CONFIG_FILE"
 
 # Set AWS Credentials
 {
+  printf '\n'
   printf '%s\n' "[${profile_name}]"
   printf '%s\n' "aws_access_key_id = $AWS_ACCESS_KEY_ID"
   printf '%s\n' "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
