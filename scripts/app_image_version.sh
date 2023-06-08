@@ -3,11 +3,11 @@
 remove_aws_config () {
   # AWS config + credentials file cleanup
   if [[ "$OSTYPE" == "darwin"* ]]; then
-    flock -x -w 8 -n ~/.aws/config.lock sed -i "" -e "/\[profile $1\]/{N;d;}" ~/.aws/config # Delete 2 lines including SED match
-    flock -x -w 8 -n ~/.aws/credentials.lock sed -i "" -e "/\[$1\]/{N;N;N;d;}" ~/.aws/credentials # Delete 4 lines including SED match
+    flock -x ~/.aws/config.lock sed -i "" -e "/\[profile $1\]/{N;d;}" ~/.aws/config # Delete 2 lines including SED match
+    flock -x ~/.aws/credentials.lock sed -i "" -e "/\[$1\]/{N;N;N;d;}" ~/.aws/credentials # Delete 4 lines including SED match
   else
-    flock -x -w 8 -n ~/.aws/config.lock sed -i -e "/\[profile $1\]/{N;d;}" ~/.aws/config
-    flock -x -w 8 -n ~/.aws/credentials.lock sed -i -e "/\[$1\]/{N;N;N;d;}" ~/.aws/credentials
+    flock -x ~/.aws/config.lock sed -i -e "/\[profile $1\]/{N;d;}" ~/.aws/config
+    flock -x ~/.aws/credentials.lock sed -i -e "/\[$1\]/{N;N;N;d;}" ~/.aws/credentials
   fi
 }
 
@@ -42,7 +42,7 @@ touch "$AWS_SHARED_CREDENTIALS_FILE"
 
 # Set AWS Config
 (
- flock -x -w 8 -n 9 || exit 1
+ flock -x 9 || exit 1
   {
     printf '%s\n' "[profile ${profile_name}]"
     printf '%s\n' "region = ${region}"
@@ -51,7 +51,7 @@ touch "$AWS_SHARED_CREDENTIALS_FILE"
 
 # Set AWS Credentials
 (
- flock -x -w 8 -n 9 || exit 1
+ flock -x 9 || exit 1
   {
     printf '%s\n' "[${profile_name}]"
     printf '%s\n' "aws_access_key_id = $AWS_ACCESS_KEY_ID"
