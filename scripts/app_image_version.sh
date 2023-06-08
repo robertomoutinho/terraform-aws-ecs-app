@@ -3,11 +3,11 @@
 remove_aws_config () {
   # AWS config + credentials file cleanup
   if [[ "$OSTYPE" == "darwin"* ]]; then
-    flock -x -w 5 -n ~/.aws/config.lock sed -i "" -e "/\[profile $1\]/{N;d;}" ~/.aws/config # Delete 2 lines including SED match
-    flock -x -w 5 -n ~/.aws/credentials.lock sed -i "" -e "/\[$1\]/{N;N;N;d;}" ~/.aws/credentials # Delete 4 lines including SED match
+    flock -x -w 8 -n ~/.aws/config.lock sed -i "" -e "/\[profile $1\]/{N;d;}" ~/.aws/config # Delete 2 lines including SED match
+    flock -x -w 8 -n ~/.aws/credentials.lock sed -i "" -e "/\[$1\]/{N;N;N;d;}" ~/.aws/credentials # Delete 4 lines including SED match
   else
-    flock -x -w 5 -n ~/.aws/config.lock sed -i -e "/\[profile $1\]/{N;d;}" ~/.aws/config
-    flock -x -w 5 -n ~/.aws/credentials.lock sed -i -e "/\[$1\]/{N;N;N;d;}" ~/.aws/credentials
+    flock -x -w 8 -n ~/.aws/config.lock sed -i -e "/\[profile $1\]/{N;d;}" ~/.aws/config
+    flock -x -w 8 -n ~/.aws/credentials.lock sed -i -e "/\[$1\]/{N;N;N;d;}" ~/.aws/credentials
   fi
 }
 
@@ -28,9 +28,7 @@ AWS_SHARED_CREDENTIALS_FILE=~/.aws/credentials
 role_session_name="ecs-$service"
 profile_name="ecs-$service"
 
-temp_role=$(aws sts assume-role \
-                    --role-arn $role_arn \
-                    --role-session-name $role_session_name)
+temp_role=$(aws sts assume-role --role-arn $role_arn --role-session-name $role_session_name)
 
 export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq -r .Credentials.AccessKeyId)
 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq -r .Credentials.SecretAccessKey)
@@ -43,20 +41,24 @@ touch "$AWS_CONFIG_FILE"
 touch "$AWS_SHARED_CREDENTIALS_FILE"
 
 # Set AWS Config
-{
-  printf '\n'
-  printf '%s\n' "[profile ${profile_name}]"
-  printf '%s\n' "region = ${region}"
-} >> "$AWS_CONFIG_FILE"
+(
+ flock -x -w 8 -n 9 || exit 1
+  {
+    printf '%s\n' "[profile ${profile_name}]"
+    printf '%s\n' "region = ${region}"
+  } >> "$AWS_CONFIG_FILE"
+) 9> ~/.aws/config.lock
 
 # Set AWS Credentials
-{
-  printf '\n'
-  printf '%s\n' "[${profile_name}]"
-  printf '%s\n' "aws_access_key_id = $AWS_ACCESS_KEY_ID"
-  printf '%s\n' "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
-  printf '%s\n' "aws_session_token = $AWS_SESSION_TOKEN"
-} >> "$AWS_SHARED_CREDENTIALS_FILE"
+(
+ flock -x -w 8 -n 9 || exit 1
+  {
+    printf '%s\n' "[${profile_name}]"
+    printf '%s\n' "aws_access_key_id = $AWS_ACCESS_KEY_ID"
+    printf '%s\n' "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
+    printf '%s\n' "aws_session_token = $AWS_SESSION_TOKEN"
+  } >> "$AWS_SHARED_CREDENTIALS_FILE"
+) 9> ~/.aws/credentials.lock
 
 # Remove extra quotes and backslashes from jsonencoding path_root in terraform
 path_root="$(echo $path_root | sed -e 's/^"//' -e 's/"$//' -e 's/\\\\/\\/g')"
