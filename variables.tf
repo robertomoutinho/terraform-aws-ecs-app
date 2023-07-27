@@ -256,7 +256,7 @@ variable "ecs_cluster_name" {
 variable "ecs_requires_compatibilities" {
   type        = list(string)
   description = "A list of requires_compatibilities"
-  default     = ["FARGATE", "EC2"]
+  default     = ["FARGATE"]
 }
 
 variable "ecs_capacity_provider" {
