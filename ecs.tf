@@ -159,7 +159,7 @@ resource "aws_ecs_task_definition" "app" {
   execution_role_arn       = var.create_default_role ? aws_iam_role.ecs_task_execution[0].arn : var.external_iam_role
   task_role_arn            = var.create_default_role ? aws_iam_role.ecs_task_execution[0].arn : var.external_iam_role
   network_mode             = "awsvpc"
-  requires_compatibilities = ["FARGATE", "EC2"]
+  requires_compatibilities = var.ecs_requires_compatibilities
   cpu                      = var.ecs_task_cpu
   memory                   = var.ecs_task_memory
 
