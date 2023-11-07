@@ -190,6 +190,12 @@ variable "asg_threshold_cpu_to_scale_down" {
   default     = 40
 }
 
+variable "asg_threshold_mem_to_scale_down" {
+  description = "The value against which the specified statistic is compared."
+  type        = number
+  default     = 40
+}
+
 variable "asg_cooldown_to_scale_up_again" {
   description = "The amount of time, in seconds, after a scaling activity completes and before the next scaling up activity can start."
   type        = number
