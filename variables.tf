@@ -178,6 +178,12 @@ variable "asg_threshold_cpu_to_scale_up" {
   default     = 60
 }
 
+variable "asg_threshold_mem_to_scale_up" {
+  description = "The value against which the specified statistic is compared."
+  type        = number
+  default     = 60
+}
+
 variable "asg_threshold_cpu_to_scale_down" {
   description = "The value against which the specified statistic is compared."
   type        = number
