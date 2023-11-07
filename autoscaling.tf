@@ -15,7 +15,7 @@ resource "aws_appautoscaling_target" "target" {
 ## App Autoscaling Policy ##
 ############################
 
-resource "aws_appautoscaling_policy" "auto_scaling" {
+resource "aws_appautoscaling_policy" "auto_scaling_cpu" {
 
   count              = var.enable_asg ? 1 : 0
   name               = "${var.environment}-${var.name}-cpu-scale"
@@ -31,6 +31,29 @@ resource "aws_appautoscaling_policy" "auto_scaling" {
 
     predefined_metric_specification {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+  }
+
+  depends_on = [aws_appautoscaling_target.target]
+
+}
+
+resource "aws_appautoscaling_policy" "auto_scaling_mem" {
+
+  count              = var.enable_asg ? 1 : 0
+  name               = "${var.environment}-${var.name}-mem-scale"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.target[0].resource_id
+  service_namespace  = aws_appautoscaling_target.target[0].service_namespace
+  scalable_dimension = aws_appautoscaling_target.target[0].scalable_dimension
+
+  target_tracking_scaling_policy_configuration {
+    target_value       = var.asg_threshold_mem_to_scale_up
+    scale_in_cooldown  = var.asg_cooldown_to_scale_up_again
+    scale_out_cooldown = var.asg_cooldown_to_scale_up_again
+
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageMemoryUtilization"
     }
   }
 
