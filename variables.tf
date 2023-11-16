@@ -50,6 +50,13 @@ variable "private_subnet_ids" {
   default     = []
 }
 
+# NLB
+variable "enable_nlb" {
+  description = "IF an network load balancer should be created"
+  type        = bool
+  default     = true
+}
+
 # ALB
 variable "enable_alb" {
   description = "IF an application load balancer should be created"
