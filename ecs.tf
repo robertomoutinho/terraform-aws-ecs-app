@@ -83,7 +83,7 @@ resource "aws_ecs_service" "app" {
     content {
       container_name   = local.container_name
       container_port   = var.app_port_mapping.0.containerPort
-      target_group_arn = aws_lb_target_group.nlb_tg.arn
+      target_group_arn = aws_lb_target_group.nlb_tg.0.arn
     }
   }
 
