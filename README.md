@@ -141,6 +141,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_enable_asg"></a> [enable\_asg](#input\_enable\_asg) | If autoscaling should be enabled | `bool` | `false` | no |
 | <a name="input_enable_datadog_log_forwarder"></a> [enable\_datadog\_log\_forwarder](#input\_enable\_datadog\_log\_forwarder) | Whether we create the lambda to forward logs to datadog | `bool` | `false` | no |
 | <a name="input_enable_datadog_sidecar"></a> [enable\_datadog\_sidecar](#input\_enable\_datadog\_sidecar) | Whether the datadog sidecar should be added to the task definition | `bool` | `false` | no |
+| <a name="input_enable_nlb"></a> [enable\_nlb](#input\_enable\_nlb) | IF an network load balancer should be created | `bool` | `true` | no |
 | <a name="input_enable_service_discovery"></a> [enable\_service\_discovery](#input\_enable\_service\_discovery) | Whether the service should be registered with Service Discovery. In order to use Service Disovery, an existing DNS Namespace must exist and be passed in. | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment | `string` | n/a | yes |
 | <a name="input_external_iam_role"></a> [external\_iam\_role](#input\_external\_iam\_role) | The ARN of the role to be attached to the ECS container | `string` | `""` | no |
