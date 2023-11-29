@@ -8,8 +8,18 @@ output "vpc_id" {
   value       = var.vpc_id
 }
 
+output "nlb_id" {
+  description = "The ID and ARN of the network load balancer created"
+  value       = try(aws_lb.nlb.0.id, null)
+}
+
+output "nlb_dns_name" {
+  description = "Dns name of nlb"
+  value       = try(aws_lb.nlb.0.dns_name, null)
+}
+
 output "alb_id" {
-  description = "The ID and ARN of the load balancer we created"
+  description = "The ID and ARN of the application load balancer created"
   value       = try(module.alb.0.this_lb_id, null)
 }
 

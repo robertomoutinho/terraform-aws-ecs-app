@@ -58,6 +58,7 @@ resource "aws_ecs_service" "app" {
     }
   }
 
+  # application load balancer
   dynamic "load_balancer" {
     for_each = module.alb
     content {
@@ -73,6 +74,16 @@ resource "aws_ecs_service" "app" {
       container_name   = local.container_name
       container_port   = var.app_port_mapping.0.containerPort
       target_group_arn = load_balancer.value
+    }
+  }
+
+  # network load balancer
+  dynamic "load_balancer" {
+    for_each = aws_lb_target_group.nlb_tg
+    content {
+      container_name   = local.container_name
+      container_port   = var.app_port_mapping.0.containerPort
+      target_group_arn = aws_lb_target_group.nlb_tg.0.arn
     }
   }
 
