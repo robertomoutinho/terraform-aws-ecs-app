@@ -31,19 +31,6 @@ module "alb" {
     },
   ]
 
-  http_tcp_listeners = [
-    {
-      port        = 80
-      protocol    = "HTTP"
-      action_type = "redirect"
-      redirect = {
-        port        = 443
-        protocol    = "HTTPS"
-        status_code = "HTTP_301"
-      }
-    },
-  ]
-
   target_groups = [
     {
       name                 = "${var.environment}-${var.name}"
@@ -67,6 +54,37 @@ module "alb" {
 
   tags = local.local_tags
 
+}
+
+# HTTPS redirects are enabled only for public facing ALB
+resource "aws_lb_listener" "allow_http" {
+  count             = var.alb_internal ? 0 : 1
+  load_balancer_arn = module.alb.0.this_lb_arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = module.alb.0.target_group_arns[0]
+  }
+}
+
+# Allow non-encrypted traffic for internal ALB onb port 80
+resource "aws_lb_listener" "force_https" {
+  count             = var.alb_internal ? 1 : 0
+  load_balancer_arn = module.alb.0.this_lb_arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
 }
 
 ## Attach extra ACM SSL certificates

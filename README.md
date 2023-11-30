@@ -54,6 +54,8 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | [aws_kms_alias.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_alias) | resource |
 | [aws_kms_key.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
 | [aws_lb.nlb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb) | resource |
+| [aws_lb_listener.allow_http](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
+| [aws_lb_listener.force_https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
 | [aws_lb_listener.nlb_listener](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
 | [aws_lb_listener_certificate.extra_certs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener_certificate) | resource |
 | [aws_lb_target_group.nlb_tg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group) | resource |
@@ -173,12 +175,14 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 |------|-------------|
 | <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | Dns name of alb |
 | <a name="output_alb_https_tcp_listener_arns"></a> [alb\_https\_tcp\_listener\_arns](#output\_alb\_https\_tcp\_listener\_arns) | The ARNs of the HTTPS load balancer listeners created. |
-| <a name="output_alb_id"></a> [alb\_id](#output\_alb\_id) | The ID and ARN of the load balancer we created |
+| <a name="output_alb_id"></a> [alb\_id](#output\_alb\_id) | The ID and ARN of the application load balancer created |
 | <a name="output_alb_target_group_arns"></a> [alb\_target\_group\_arns](#output\_alb\_target\_group\_arns) | ARNs of the target groups. Useful for passing to your Auto Scaling group. |
 | <a name="output_alb_zone_id"></a> [alb\_zone\_id](#output\_alb\_zone\_id) | Zone ID of alb |
 | <a name="output_cloudwatch_group_name"></a> [cloudwatch\_group\_name](#output\_cloudwatch\_group\_name) | The AWS cloudwatch group name |
 | <a name="output_ecs_security_group"></a> [ecs\_security\_group](#output\_ecs\_security\_group) | Security group assigned to ECS Service in network configuration |
 | <a name="output_ecs_task_definition"></a> [ecs\_task\_definition](#output\_ecs\_task\_definition) | Task definition for ECS service (used for external triggers) |
+| <a name="output_nlb_dns_name"></a> [nlb\_dns\_name](#output\_nlb\_dns\_name) | Dns name of nlb |
+| <a name="output_nlb_id"></a> [nlb\_id](#output\_nlb\_id) | The ID and ARN of the network load balancer created |
 | <a name="output_task_role_arn"></a> [task\_role\_arn](#output\_task\_role\_arn) | The app ECS task role arn |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | ID of the VPC that was created or passed in |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
