@@ -59,20 +59,20 @@ module "alb" {
 # HTTPS redirects are enabled only for public facing ALB
 resource "aws_lb_listener" "allow_http" {
   count             = var.enable_alb && var.alb_internal ? 0 : 1
-  load_balancer_arn = module.alb.0.this_lb_arn
+  load_balancer_arn = module.alb[0].this_lb_arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = module.alb.0.target_group_arns[0]
+    target_group_arn = module.alb[0].target_group_arns[0]
   }
 }
 
 # Allow non-encrypted traffic for internal ALB onb port 80
 resource "aws_lb_listener" "force_https" {
   count             = var.enable_alb && var.alb_internal ? 1 : 0
-  load_balancer_arn = module.alb.0.this_lb_arn
+  load_balancer_arn = module.alb[0].this_lb_arn
   port              = "80"
   protocol          = "HTTP"
 
