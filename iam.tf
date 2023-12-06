@@ -30,25 +30,45 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
   policy_arn = element(var.policies_arn, count.index)
 }
 
-###################
-## Secrets Acess ##
-###################
+####################
+## Secrets Access ##
+####################
+data "aws_secretsmanager_secret" "creds" {
+  count = var.repository_credentials_name != null ? 1 : 0
+  name  = var.repository_credentials_name
+}
+
+locals {
+  secretsmanager_arns = [
+    "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:/${local.secret_path}/*",
+    "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:/${var.environment}/shared/*"
+  ]
+}
 
 data "aws_iam_policy_document" "ecs_task_access_secrets" {
   statement {
     effect = "Allow"
-
     resources = [
       "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/${local.secret_path}/*",
-      "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:/${local.secret_path}/*",
       "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment}/shared/*",
-      "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:/${var.environment}/shared/*"
     ]
-
     actions = [
+      "ssm:GetParameter",
       "ssm:GetParameters",
+      "ssm:GetParametersByPath",
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    resources = concat(
+      local.secretsmanager_arns,
+      var.repository_credentials_name != null ? [data.aws_secretsmanager_secret.creds[0].arn] : []
+    )
+    actions = [
       "secretsmanager:GetSecretValue",
     ]
+
   }
 }
 
