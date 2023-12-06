@@ -114,6 +114,11 @@ module "container_definition" {
   port_mappings = var.app_port_mapping
   mount_points  = var.ecs_mount_points
 
+  repository_credentials = (var.repository_credentials_name != null
+    ? { credentialsParameter = data.aws_secretsmanager_secret.creds[0].arn }
+    : null
+  )
+
   log_configuration = (var.enable_datadog_log_forwarder ? {
     logDriver = "awsfirelens"
     options = {

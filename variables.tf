@@ -20,6 +20,12 @@ variable "secret_path" {
   default     = ""
 }
 
+variable "repository_credentials_name" {
+  description = "The SecretsManager Secret Name of the repository credentials to use"
+  type        = string
+  default     = null
+}
+
 variable "app_fqdn" {
   description = "FQDN of app to use. Set this only to override Route53 and ALB's DNS name."
   type        = string
