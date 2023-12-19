@@ -562,6 +562,15 @@ variable "datadog_service_name" {
   default     = ""
 }
 
+variable "datadog_agent_integrations" {
+  description = "The datadog agent integrations, see Docker (AD v2) at https://docs.datadoghq.com/containers/docker/integrations/?tab=dockeradv2"
+  type = list(object({
+    name   = string
+    config = optional(list(string), [])
+  }))
+  default = []
+}
+
 variable "datadog_tags" {
   description = " Tags for datadog agent container."
   type        = string
