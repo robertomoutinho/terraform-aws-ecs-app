@@ -77,6 +77,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [aws_route53_zone.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
+| [aws_secretsmanager_secret.creds](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/secretsmanager_secret) | data source |
 | [aws_vpc.selected](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc) | data source |
 | [external_external.current_image](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) | data source |
 
@@ -118,6 +119,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_custom_environment_variables"></a> [custom\_environment\_variables](#input\_custom\_environment\_variables) | List of additional environment variables the container will use (list should contain maps with `name` and `value`) | <pre>list(object(<br>    {<br>      name  = string<br>      value = string<br>    }<br>  ))</pre> | `[]` | no |
 | <a name="input_datadog_agent_container_essential"></a> [datadog\_agent\_container\_essential](#input\_datadog\_agent\_container\_essential) | Determines whether all other containers in a task are stopped, if this container fails or stops for any reason | `bool` | `false` | no |
 | <a name="input_datadog_agent_container_image"></a> [datadog\_agent\_container\_image](#input\_datadog\_agent\_container\_image) | The datadog agent sidecar container image | `string` | `"datadog/agent:latest"` | no |
+| <a name="input_datadog_agent_integrations"></a> [datadog\_agent\_integrations](#input\_datadog\_agent\_integrations) | The datadog agent integrations, see Docker (AD v2) at https://docs.datadoghq.com/containers/docker/integrations/?tab=dockeradv2 | <pre>list(object({<br>    name   = string<br>    config = optional(list(string), [])<br>  }))</pre> | `[]` | no |
 | <a name="input_datadog_firelens_container_essential"></a> [datadog\_firelens\_container\_essential](#input\_datadog\_firelens\_container\_essential) | Determines whether all other containers in a task are stopped, if this container fails or stops for any reason | `bool` | `false` | no |
 | <a name="input_datadog_firelens_container_image"></a> [datadog\_firelens\_container\_image](#input\_datadog\_firelens\_container\_image) | The datadog firelens sidecar container image | `string` | `"amazon/aws-for-fluent-bit:stable"` | no |
 | <a name="input_datadog_service_name"></a> [datadog\_service\_name](#input\_datadog\_service\_name) | The datadog service name | `string` | `""` | no |
@@ -158,6 +160,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_policies_arn"></a> [policies\_arn](#input\_policies\_arn) | A list of the ARN of the policies you want to apply | `list(string)` | <pre>[<br>  "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"<br>]</pre> | no |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | A list of IDs of existing private subnets inside the VPC | `list(string)` | `[]` | no |
 | <a name="input_public_subnet_ids"></a> [public\_subnet\_ids](#input\_public\_subnet\_ids) | A list of IDs of existing public subnets inside the VPC | `list(string)` | `[]` | no |
+| <a name="input_repository_credentials_name"></a> [repository\_credentials\_name](#input\_repository\_credentials\_name) | The SecretsManager Secret Name of the repository credentials to use | `string` | `null` | no |
 | <a name="input_route53_record_name"></a> [route53\_record\_name](#input\_route53\_record\_name) | Name of Route53 record to create ACM certificate in and main A-record. If null is specified, var.name is used instead. Provide empty string to point root domain name to ALB. | `string` | `null` | no |
 | <a name="input_route53_zone_name"></a> [route53\_zone\_name](#input\_route53\_zone\_name) | Route53 zone name to create ACM certificate in and main A-record, without trailing dot | `string` | `""` | no |
 | <a name="input_secret_path"></a> [secret\_path](#input\_secret\_path) | path to append to IAM secrets access policy | `string` | `""` | no |

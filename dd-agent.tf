@@ -1,5 +1,4 @@
 module "datadog_sidecar" {
-
   source  = "cloudposse/ecs-container-definition/aws"
   version = "v0.58.1"
 
@@ -62,4 +61,13 @@ module "datadog_sidecar" {
     },
   ]
 
+  # See https://docs.datadoghq.com/containers/docker/integrations/?tab=dockeradv2 for more information
+  docker_labels = {
+    "com.datadoghq.ad.checks" = jsonencode(
+      {
+        for name, config in var.datadog_agent_integrations :
+        name => { instances = config }
+      }
+    )
+  }
 }
