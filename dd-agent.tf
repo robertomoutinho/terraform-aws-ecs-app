@@ -65,8 +65,8 @@ module "datadog_sidecar" {
   docker_labels = {
     "com.datadoghq.ad.checks" = jsonencode(
       {
-        for name, config in var.datadog_agent_integrations :
-        name => { instances = config }
+        for entry in var.datadog_agent_integrations :
+        entry.name => { instances = entry.config }
       }
     )
   }
