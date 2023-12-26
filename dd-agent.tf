@@ -61,13 +61,4 @@ module "datadog_sidecar" {
     },
   ]
 
-  # See https://docs.datadoghq.com/containers/docker/integrations/?tab=dockeradv2 for more information
-  docker_labels = {
-    "com.datadoghq.ad.checks" = jsonencode(
-      {
-        for entry in var.datadog_agent_integrations :
-        entry.name => { instances = entry.config }
-      }
-    )
-  }
 }
