@@ -5,20 +5,10 @@ locals {
   container_image                 = data.external.current_image.result["image_tag"] == "not_found" ? "nginx:latest" : "${var.app_ecr_image_repo}:${data.external.current_image.result["image_tag"]}"
   # container_image_version         = data.external.current_image.result["image_tag"] == "not_found" ? "latest" : element(split(separator,data.external.current_image.result["image_tag"]),1)
   latest_task_definition = "${aws_ecs_task_definition.app.family}:${max(aws_ecs_task_definition.app.revision, data.external.current_image.result["task_definition_revision"])}"
-  docker_labels = merge({
+  datadog_docker_labels = {
     "com.datadoghq.tags.env"     = var.environment,
     "com.datadoghq.tags.service" = var.datadog_service_name == "" ? var.name : var.datadog_service_name
-    },
-    length(var.datadog_agent_integrations) > 0 ? {
-      # See https://docs.datadoghq.com/containers/docker/integrations/?tab=dockeradv2 for more information
-      "com.datadoghq.ad.checks" = jsonencode(
-        {
-          for entry in var.datadog_agent_integrations :
-          entry.name => { instances = entry.config }
-        }
-      )
-    } : {}
-  )
+  }
 }
 
 data "aws_ecs_cluster" "cluster" {
@@ -166,7 +156,7 @@ module "container_definition" {
     }
   ] : null)
 
-  docker_labels = var.enable_datadog_sidecar ? local.docker_labels : null
+  docker_labels = var.enable_datadog_sidecar ? merge(local.datadog_docker_labels, var.docker_labels) : var.docker_labels
 
   environment = var.enable_datadog_sidecar ? flatten(concat(var.custom_environment_variables,
     [

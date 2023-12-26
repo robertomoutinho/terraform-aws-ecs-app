@@ -522,6 +522,12 @@ variable "service_discovery_failure_threshold" {
   default     = 1
 }
 
+variable "docker_labels" {
+  description = "Docker labels to add to the container"
+  type        = map(string)
+  default     = {}
+}
+
 ## Datadog sidecar
 variable "enable_datadog_sidecar" {
   description = "Whether the datadog sidecar should be added to the task definition"
@@ -560,15 +566,6 @@ variable "datadog_firelens_container_essential" {
 variable "datadog_service_name" {
   description = "The datadog service name"
   default     = ""
-}
-
-variable "datadog_agent_integrations" {
-  description = "The datadog agent integrations, see Docker (AD v2) at https://docs.datadoghq.com/containers/docker/integrations/?tab=dockeradv2"
-  type = list(object({
-    name   = string
-    config = optional(list(map(string)), [])
-  }))
-  default = []
 }
 
 variable "datadog_tags" {
