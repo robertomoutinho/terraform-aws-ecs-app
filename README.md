@@ -121,6 +121,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_datadog_agent_container_image"></a> [datadog\_agent\_container\_image](#input\_datadog\_agent\_container\_image) | The datadog agent sidecar container image | `string` | `"datadog/agent:latest"` | no |
 | <a name="input_datadog_firelens_container_essential"></a> [datadog\_firelens\_container\_essential](#input\_datadog\_firelens\_container\_essential) | Determines whether all other containers in a task are stopped, if this container fails or stops for any reason | `bool` | `false` | no |
 | <a name="input_datadog_firelens_container_image"></a> [datadog\_firelens\_container\_image](#input\_datadog\_firelens\_container\_image) | The datadog firelens sidecar container image | `string` | `"amazon/aws-for-fluent-bit:stable"` | no |
+| <a name="input_datadog_process_collection_enabled"></a> [datadog\_process\_collection\_enabled](#input\_datadog\_process\_collection\_enabled) | Whether to enable process collection | `bool` | `true` | no |
 | <a name="input_datadog_service_name"></a> [datadog\_service\_name](#input\_datadog\_service\_name) | The datadog service name | `string` | `""` | no |
 | <a name="input_datadog_tags"></a> [datadog\_tags](#input\_datadog\_tags) | Tags for datadog agent container. | `string` | `"env:default, service:default, region:default"` | no |
 | <a name="input_docker_labels"></a> [docker\_labels](#input\_docker\_labels) | Docker labels to add to the container | `map(string)` | `{}` | no |

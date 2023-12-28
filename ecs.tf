@@ -206,5 +206,8 @@ resource "aws_ecs_task_definition" "app" {
       }
     }
   }
+
+  pid_mode = var.datadog_process_collection_enabled ? "task" : null
+
   tags = local.local_tags
 }

@@ -568,6 +568,12 @@ variable "datadog_service_name" {
   default     = ""
 }
 
+variable "datadog_process_collection_enabled" {
+  description = "Whether to enable process collection"
+  type        = bool
+  default     = true
+}
+
 variable "datadog_tags" {
   description = " Tags for datadog agent container."
   type        = string
