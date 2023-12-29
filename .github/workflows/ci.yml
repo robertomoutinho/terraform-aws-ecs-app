@@ -2,7 +2,7 @@ name: Main CI
 on:
   push:
     branches:
-      - main
+      - master
 jobs:
   bump-tag-version:
     name: Bump and Tag Version
