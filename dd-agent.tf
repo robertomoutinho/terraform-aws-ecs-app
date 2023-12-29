@@ -52,6 +52,10 @@ module "datadog_sidecar" {
       name  = "DD_TAGS"
       value = replace(var.datadog_tags, ",", " ")
     },
+    {
+      name  = "DD_PROCESS_AGENT_PROCESS_COLLECTION_ENABLED"
+      value = tostring(var.datadog_process_collection_enabled)
+    }
   ]
 
   secrets = [
