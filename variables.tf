@@ -161,6 +161,19 @@ variable "enable_asg" {
   default     = false
 }
 
+variable "enable_cpu_scaling" {
+  description = "If autoscaling should be enabled based on CPU"
+  type        = bool
+  default     = true
+}
+
+variable "enable_mem_scaling" {
+  description = "If autoscaling should be enabled based on Memory"
+  type        = bool
+  default     = true
+
+}
+
 variable "asg_max_tasks" {
   description = "The amount of maximum tasks"
   type        = number
