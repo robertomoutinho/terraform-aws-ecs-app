@@ -144,8 +144,10 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_ecs_ulimits"></a> [ecs\_ulimits](#input\_ecs\_ulimits) | Container ulimit settings. This is a list of maps, where each map should contain "name", "hardLimit" and "softLimit" | <pre>list(object({<br>    name      = string<br>    hardLimit = number<br>    softLimit = number<br>  }))</pre> | `null` | no |
 | <a name="input_enable_alb"></a> [enable\_alb](#input\_enable\_alb) | IF an application load balancer should be created | `bool` | `true` | no |
 | <a name="input_enable_asg"></a> [enable\_asg](#input\_enable\_asg) | If autoscaling should be enabled | `bool` | `false` | no |
+| <a name="input_enable_cpu_scaling"></a> [enable\_cpu\_scaling](#input\_enable\_cpu\_scaling) | If autoscaling should be enabled based on CPU | `bool` | `true` | no |
 | <a name="input_enable_datadog_log_forwarder"></a> [enable\_datadog\_log\_forwarder](#input\_enable\_datadog\_log\_forwarder) | Whether we create the lambda to forward logs to datadog | `bool` | `false` | no |
 | <a name="input_enable_datadog_sidecar"></a> [enable\_datadog\_sidecar](#input\_enable\_datadog\_sidecar) | Whether the datadog sidecar should be added to the task definition | `bool` | `false` | no |
+| <a name="input_enable_mem_scaling"></a> [enable\_mem\_scaling](#input\_enable\_mem\_scaling) | If autoscaling should be enabled based on Memory | `bool` | `true` | no |
 | <a name="input_enable_nlb"></a> [enable\_nlb](#input\_enable\_nlb) | IF an network load balancer should be created | `bool` | `true` | no |
 | <a name="input_enable_service_discovery"></a> [enable\_service\_discovery](#input\_enable\_service\_discovery) | Whether the service should be registered with Service Discovery. In order to use Service Disovery, an existing DNS Namespace must exist and be passed in. | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment | `string` | n/a | yes |
