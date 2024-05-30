@@ -60,3 +60,29 @@ resource "aws_appautoscaling_policy" "auto_scaling_mem" {
   depends_on = [aws_appautoscaling_target.target]
 
 }
+
+#######################
+## Custom Cloudwatch ##
+#######################
+
+resource "aws_appautoscaling_policy" "auto_scaling_custom_cloudwatch" {
+
+  count              = (var.enable_asg && var.enable_custom_scaling) ? 1 : 0
+  name               = "${var.environment}-${var.name}-custom-scale"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.target[0].resource_id
+  service_namespace  = aws_appautoscaling_target.target[0].service_namespace
+  scalable_dimension = aws_appautoscaling_target.target[0].scalable_dimension
+
+  target_tracking_scaling_policy_configuration {
+    target_value = var.asg_custom_scaling_target_value
+    customized_metric_specification {
+      metric_name = var.asg_custom_scaling_metric_name
+      namespace   = var.asg_custom_scaling_namespace
+      statistic   = var.asg_custom_scaling_statistic
+    }
+  }
+
+  depends_on = [aws_appautoscaling_target.target]
+
+}

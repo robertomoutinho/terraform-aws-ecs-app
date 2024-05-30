@@ -60,7 +60,7 @@ variable "private_subnet_ids" {
 variable "enable_nlb" {
   description = "IF an network load balancer should be created"
   type        = bool
-  default     = true
+  default     = false
 }
 
 # ALB
@@ -232,6 +232,38 @@ variable "asg_cooldown_to_scale_down_again" {
   description = "The amount of time, in seconds, after a scaling activity completes and before the next scaling down activity can start."
   type        = number
   default     = 300
+}
+
+# Custom ASG
+
+variable "enable_custom_scaling" {
+  description = "If autoscaling should be enabled based on a custom metric"
+  type        = bool
+  default     = false
+}
+
+variable "asg_custom_scaling_target_value" {
+  description = "Target value for the metric"
+  type        = number
+  default     = 100
+}
+
+variable "asg_custom_scaling_metric_name" {
+  description = "Name of the metric"
+  type        = string
+  default     = null
+}
+
+variable "asg_custom_scaling_namespace" {
+  description = "Namespace of the metric"
+  type        = string
+  default     = null
+}
+
+variable "asg_custom_scaling_statistic" {
+  description = "Statistic of the metric"
+  type        = string
+  default     = null
 }
 
 # ACM

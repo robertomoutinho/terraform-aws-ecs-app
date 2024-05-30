@@ -42,6 +42,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | Name | Type |
 |------|------|
 | [aws_appautoscaling_policy.auto_scaling_cpu](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
+| [aws_appautoscaling_policy.auto_scaling_custom_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
 | [aws_appautoscaling_policy.auto_scaling_mem](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
 | [aws_appautoscaling_target.target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_target) | resource |
 | [aws_cloudwatch_log_group.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
@@ -101,6 +102,10 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_app_sg_extra_cidr"></a> [app\_sg\_extra\_cidr](#input\_app\_sg\_extra\_cidr) | A list of extra cidr blocks to allow ingress traffic to container | `list(string)` | `[]` | no |
 | <a name="input_asg_cooldown_to_scale_down_again"></a> [asg\_cooldown\_to\_scale\_down\_again](#input\_asg\_cooldown\_to\_scale\_down\_again) | The amount of time, in seconds, after a scaling activity completes and before the next scaling down activity can start. | `number` | `300` | no |
 | <a name="input_asg_cooldown_to_scale_up_again"></a> [asg\_cooldown\_to\_scale\_up\_again](#input\_asg\_cooldown\_to\_scale\_up\_again) | The amount of time, in seconds, after a scaling activity completes and before the next scaling up activity can start. | `number` | `60` | no |
+| <a name="input_asg_custom_scaling_metric_name"></a> [asg\_custom\_scaling\_metric\_name](#input\_asg\_custom\_scaling\_metric\_name) | Name of the metric | `string` | `null` | no |
+| <a name="input_asg_custom_scaling_namespace"></a> [asg\_custom\_scaling\_namespace](#input\_asg\_custom\_scaling\_namespace) | Namespace of the metric | `string` | `null` | no |
+| <a name="input_asg_custom_scaling_statistic"></a> [asg\_custom\_scaling\_statistic](#input\_asg\_custom\_scaling\_statistic) | Statistic of the metric | `string` | `null` | no |
+| <a name="input_asg_custom_scaling_target_value"></a> [asg\_custom\_scaling\_target\_value](#input\_asg\_custom\_scaling\_target\_value) | Target value for the metric | `number` | `100` | no |
 | <a name="input_asg_evaluation_periods"></a> [asg\_evaluation\_periods](#input\_asg\_evaluation\_periods) | The number of periods over which data is compared to the specified threshold. | `number` | `5` | no |
 | <a name="input_asg_max_tasks"></a> [asg\_max\_tasks](#input\_asg\_max\_tasks) | The amount of maximum tasks | `number` | `3` | no |
 | <a name="input_asg_min_tasks"></a> [asg\_min\_tasks](#input\_asg\_min\_tasks) | The amount of minimum tasks | `number` | `1` | no |
@@ -145,10 +150,11 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_enable_alb"></a> [enable\_alb](#input\_enable\_alb) | IF an application load balancer should be created | `bool` | `true` | no |
 | <a name="input_enable_asg"></a> [enable\_asg](#input\_enable\_asg) | If autoscaling should be enabled | `bool` | `false` | no |
 | <a name="input_enable_cpu_scaling"></a> [enable\_cpu\_scaling](#input\_enable\_cpu\_scaling) | If autoscaling should be enabled based on CPU | `bool` | `true` | no |
+| <a name="input_enable_custom_scaling"></a> [enable\_custom\_scaling](#input\_enable\_custom\_scaling) | If autoscaling should be enabled based on a custom metric | `bool` | `false` | no |
 | <a name="input_enable_datadog_log_forwarder"></a> [enable\_datadog\_log\_forwarder](#input\_enable\_datadog\_log\_forwarder) | Whether we create the lambda to forward logs to datadog | `bool` | `false` | no |
 | <a name="input_enable_datadog_sidecar"></a> [enable\_datadog\_sidecar](#input\_enable\_datadog\_sidecar) | Whether the datadog sidecar should be added to the task definition | `bool` | `false` | no |
 | <a name="input_enable_mem_scaling"></a> [enable\_mem\_scaling](#input\_enable\_mem\_scaling) | If autoscaling should be enabled based on Memory | `bool` | `true` | no |
-| <a name="input_enable_nlb"></a> [enable\_nlb](#input\_enable\_nlb) | IF an network load balancer should be created | `bool` | `true` | no |
+| <a name="input_enable_nlb"></a> [enable\_nlb](#input\_enable\_nlb) | IF an network load balancer should be created | `bool` | `false` | no |
 | <a name="input_enable_service_discovery"></a> [enable\_service\_discovery](#input\_enable\_service\_discovery) | Whether the service should be registered with Service Discovery. In order to use Service Disovery, an existing DNS Namespace must exist and be passed in. | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment | `string` | n/a | yes |
 | <a name="input_external_iam_role"></a> [external\_iam\_role](#input\_external\_iam\_role) | The ARN of the role to be attached to the ECS container | `string` | `""` | no |
