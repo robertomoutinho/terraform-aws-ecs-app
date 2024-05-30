@@ -556,7 +556,7 @@ variable "enable_datadog_log_forwarder" {
 
 variable "datadog_agent_container_image" {
   description = "The datadog agent sidecar container image"
-  default     = "datadog/agent:latest"
+  default     = "public.ecr.aws/datadog/agent:latest"
 }
 
 variable "datadog_agent_container_essential" {
@@ -567,7 +567,7 @@ variable "datadog_agent_container_essential" {
 
 variable "datadog_firelens_container_image" {
   description = "The datadog firelens sidecar container image"
-  default     = "amazon/aws-for-fluent-bit:stable"
+  default     = "public.ecr.aws/aws-observability/aws-for-fluent-bit:stable"
 }
 
 variable "datadog_firelens_container_essential" {
