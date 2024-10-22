@@ -44,6 +44,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | [aws_appautoscaling_policy.auto_scaling_cpu](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
 | [aws_appautoscaling_policy.auto_scaling_custom_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
 | [aws_appautoscaling_policy.auto_scaling_mem](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
+| [aws_appautoscaling_policy.auto_scaling_request](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
 | [aws_appautoscaling_target.target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_target) | resource |
 | [aws_cloudwatch_log_group.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_ecs_service.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service) | resource |
@@ -110,10 +111,9 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_asg_max_tasks"></a> [asg\_max\_tasks](#input\_asg\_max\_tasks) | The amount of maximum tasks | `number` | `3` | no |
 | <a name="input_asg_min_tasks"></a> [asg\_min\_tasks](#input\_asg\_min\_tasks) | The amount of minimum tasks | `number` | `1` | no |
 | <a name="input_asg_period"></a> [asg\_period](#input\_asg\_period) | The period in seconds over which the specified statistic is applied | `number` | `60` | no |
-| <a name="input_asg_threshold_cpu_to_scale_down"></a> [asg\_threshold\_cpu\_to\_scale\_down](#input\_asg\_threshold\_cpu\_to\_scale\_down) | The value against which the specified statistic is compared. | `number` | `40` | no |
 | <a name="input_asg_threshold_cpu_to_scale_up"></a> [asg\_threshold\_cpu\_to\_scale\_up](#input\_asg\_threshold\_cpu\_to\_scale\_up) | The value against which the specified statistic is compared. | `number` | `60` | no |
-| <a name="input_asg_threshold_mem_to_scale_down"></a> [asg\_threshold\_mem\_to\_scale\_down](#input\_asg\_threshold\_mem\_to\_scale\_down) | The value against which the specified statistic is compared. | `number` | `40` | no |
 | <a name="input_asg_threshold_mem_to_scale_up"></a> [asg\_threshold\_mem\_to\_scale\_up](#input\_asg\_threshold\_mem\_to\_scale\_up) | The value against which the specified statistic is compared. | `number` | `60` | no |
+| <a name="input_asg_threshold_request_to_scale_up"></a> [asg\_threshold\_request\_to\_scale\_up](#input\_asg\_threshold\_request\_to\_scale\_up) | The value against which the specified statistic is compared. | `number` | `100` | no |
 | <a name="input_certificate_arn"></a> [certificate\_arn](#input\_certificate\_arn) | ARN of certificate issued by AWS ACM. | `string` | `""` | no |
 | <a name="input_cloudwatch_log_retention_in_days"></a> [cloudwatch\_log\_retention\_in\_days](#input\_cloudwatch\_log\_retention\_in\_days) | Retention period of app CloudWatch logs | `number` | `7` | no |
 | <a name="input_container_memory_reservation"></a> [container\_memory\_reservation](#input\_container\_memory\_reservation) | The amount of memory (in MiB) to reserve for the container | `number` | `128` | no |
@@ -153,8 +153,9 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_enable_custom_scaling"></a> [enable\_custom\_scaling](#input\_enable\_custom\_scaling) | If autoscaling should be enabled based on a custom metric | `bool` | `false` | no |
 | <a name="input_enable_datadog_log_forwarder"></a> [enable\_datadog\_log\_forwarder](#input\_enable\_datadog\_log\_forwarder) | Whether we create the lambda to forward logs to datadog | `bool` | `false` | no |
 | <a name="input_enable_datadog_sidecar"></a> [enable\_datadog\_sidecar](#input\_enable\_datadog\_sidecar) | Whether the datadog sidecar should be added to the task definition | `bool` | `false` | no |
-| <a name="input_enable_mem_scaling"></a> [enable\_mem\_scaling](#input\_enable\_mem\_scaling) | If autoscaling should be enabled based on Memory | `bool` | `true` | no |
+| <a name="input_enable_mem_scaling"></a> [enable\_mem\_scaling](#input\_enable\_mem\_scaling) | If autoscaling should be enabled based on Memory | `bool` | `false` | no |
 | <a name="input_enable_nlb"></a> [enable\_nlb](#input\_enable\_nlb) | IF an network load balancer should be created | `bool` | `false` | no |
+| <a name="input_enable_request_scaling"></a> [enable\_request\_scaling](#input\_enable\_request\_scaling) | If autoscaling should be enabled based on qtd of request for ALB | `bool` | `false` | no |
 | <a name="input_enable_service_discovery"></a> [enable\_service\_discovery](#input\_enable\_service\_discovery) | Whether the service should be registered with Service Discovery. In order to use Service Disovery, an existing DNS Namespace must exist and be passed in. | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment | `string` | n/a | yes |
 | <a name="input_external_iam_role"></a> [external\_iam\_role](#input\_external\_iam\_role) | The ARN of the role to be attached to the ECS container | `string` | `""` | no |

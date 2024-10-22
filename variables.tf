@@ -170,8 +170,13 @@ variable "enable_cpu_scaling" {
 variable "enable_mem_scaling" {
   description = "If autoscaling should be enabled based on Memory"
   type        = bool
-  default     = true
+  default     = false
+}
 
+variable "enable_request_scaling" {
+  description = "If autoscaling should be enabled based on qtd of request for ALB"
+  type        = bool
+  default     = false
 }
 
 variable "asg_max_tasks" {
@@ -210,16 +215,10 @@ variable "asg_threshold_mem_to_scale_up" {
   default     = 60
 }
 
-variable "asg_threshold_cpu_to_scale_down" {
+variable "asg_threshold_request_to_scale_up" {
   description = "The value against which the specified statistic is compared."
   type        = number
-  default     = 40
-}
-
-variable "asg_threshold_mem_to_scale_down" {
-  description = "The value against which the specified statistic is compared."
-  type        = number
-  default     = 40
+  default     = 100
 }
 
 variable "asg_cooldown_to_scale_up_again" {
