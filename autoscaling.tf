@@ -99,44 +99,42 @@ resource "aws_appautoscaling_policy" "this" {
   service_namespace  = aws_appautoscaling_target.target[0].service_namespace
   scalable_dimension = aws_appautoscaling_target.target[0].scalable_dimension
 
-  dynamic "target_tracking_scaling_policy_configuration" {
-    for_each = each.value.target_tracking_scaling_policy_configuration
-
-    content {
-      dynamic "customized_metric_specification" {
-        for_each = try([target_tracking_scaling_policy_configuration.value.customized_metric_specification], [])
-
-        content {
-          dynamic "dimensions" {
-            for_each = try(customized_metric_specification.value.dimensions, [])
-
-            content {
-              name  = dimensions.value.name
-              value = dimensions.value.value
+  target_tracking_scaling_policy_configuration {
+    target_value       = try(each.value.target_tracking_scaling_policy_configuration.value.target_value, 75)
+    scale_in_cooldown  = try(each.value.target_tracking_scaling_policy_configuration.value.scale_in_cooldown, 300)
+    scale_out_cooldown = try(each.value.target_tracking_scaling_policy_configuration.value.scale_out_cooldown, 60)
+    dynamic "customized_metric_specification" {
+      for_each = try([each.value.target_tracking_scaling_policy_configuration.value.customized_metric_specification], [])
+      content {
+        dynamic "metrics" {
+          for_each = try([customized_metric_specification.value.metrics], [])
+          content {
+            id          = metrics.value.id
+            label       = metrics.value.label
+            return_data = metrics.value.return_data
+            dynamic "metric_stat" {
+              for_each = try([metrics.value.metric_stat], [])
+              content {
+                stat = metric_stat.value.stat
+                dynamic "metric" {
+                  for_each = try([metric_stat.value.metric], [])
+                  content {
+                    namespace   = metric.value.namespace
+                    metric_name = metric.value.metric_name
+                    dynamic "dimensions" {
+                      for_each = try([metric.value.dimensions], [])
+                      content {
+                        name  = dimensions.value.name
+                        value = dimensions.value.value
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
-
-          metric_name = customized_metric_specification.value.metric_name
-          namespace   = customized_metric_specification.value.namespace
-          statistic   = customized_metric_specification.value.statistic
-          unit        = try(customized_metric_specification.value.unit, null)
         }
       }
-
-      disable_scale_in = try(target_tracking_scaling_policy_configuration.value.disable_scale_in, null)
-
-      dynamic "predefined_metric_specification" {
-        for_each = try([target_tracking_scaling_policy_configuration.value.predefined_metric_specification], [])
-
-        content {
-          predefined_metric_type = predefined_metric_specification.value.predefined_metric_type
-          resource_label         = try(predefined_metric_specification.value.resource_label, null)
-        }
-      }
-
-      scale_in_cooldown  = try(target_tracking_scaling_policy_configuration.value.scale_in_cooldown, 300)
-      scale_out_cooldown = try(target_tracking_scaling_policy_configuration.value.scale_out_cooldown, 60)
-      target_value       = try(target_tracking_scaling_policy_configuration.value.target_value, 75)
     }
   }
 
