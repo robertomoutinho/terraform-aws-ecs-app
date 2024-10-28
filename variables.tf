@@ -241,28 +241,25 @@ variable "enable_custom_scaling" {
   default     = false
 }
 
-variable "asg_custom_scaling_target_value" {
-  description = "Target value for the metric"
-  type        = number
-  default     = 100
-}
-
-variable "asg_custom_scaling_metric_name" {
-  description = "Name of the metric"
-  type        = string
-  default     = null
-}
-
-variable "asg_custom_scaling_namespace" {
-  description = "Namespace of the metric"
-  type        = string
-  default     = null
-}
-
-variable "asg_custom_scaling_statistic" {
-  description = "Statistic of the metric"
-  type        = string
-  default     = null
+variable "asg_custom_policies" {
+  description = "Map of autoscaling policies to create for the service"
+  type        = any
+  default = {
+    cpu = {
+      target_tracking_scaling_policy_configuration = {
+        predefined_metric_specification = {
+          predefined_metric_type = "ECSServiceAverageCPUUtilization"
+        }
+      }
+    }
+    memory = {
+      target_tracking_scaling_policy_configuration = {
+        predefined_metric_specification = {
+          predefined_metric_type = "ECSServiceAverageMemoryUtilization"
+        }
+      }
+    }
+  }
 }
 
 # ACM

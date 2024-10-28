@@ -42,9 +42,9 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | Name | Type |
 |------|------|
 | [aws_appautoscaling_policy.auto_scaling_cpu](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
-| [aws_appautoscaling_policy.auto_scaling_custom_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
 | [aws_appautoscaling_policy.auto_scaling_mem](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
 | [aws_appautoscaling_policy.auto_scaling_request](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
+| [aws_appautoscaling_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
 | [aws_appautoscaling_target.target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_target) | resource |
 | [aws_cloudwatch_log_group.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_ecs_service.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service) | resource |
@@ -103,10 +103,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 | <a name="input_app_sg_extra_cidr"></a> [app\_sg\_extra\_cidr](#input\_app\_sg\_extra\_cidr) | A list of extra cidr blocks to allow ingress traffic to container | `list(string)` | `[]` | no |
 | <a name="input_asg_cooldown_to_scale_down_again"></a> [asg\_cooldown\_to\_scale\_down\_again](#input\_asg\_cooldown\_to\_scale\_down\_again) | The amount of time, in seconds, after a scaling activity completes and before the next scaling down activity can start. | `number` | `300` | no |
 | <a name="input_asg_cooldown_to_scale_up_again"></a> [asg\_cooldown\_to\_scale\_up\_again](#input\_asg\_cooldown\_to\_scale\_up\_again) | The amount of time, in seconds, after a scaling activity completes and before the next scaling up activity can start. | `number` | `60` | no |
-| <a name="input_asg_custom_scaling_metric_name"></a> [asg\_custom\_scaling\_metric\_name](#input\_asg\_custom\_scaling\_metric\_name) | Name of the metric | `string` | `null` | no |
-| <a name="input_asg_custom_scaling_namespace"></a> [asg\_custom\_scaling\_namespace](#input\_asg\_custom\_scaling\_namespace) | Namespace of the metric | `string` | `null` | no |
-| <a name="input_asg_custom_scaling_statistic"></a> [asg\_custom\_scaling\_statistic](#input\_asg\_custom\_scaling\_statistic) | Statistic of the metric | `string` | `null` | no |
-| <a name="input_asg_custom_scaling_target_value"></a> [asg\_custom\_scaling\_target\_value](#input\_asg\_custom\_scaling\_target\_value) | Target value for the metric | `number` | `100` | no |
+| <a name="input_asg_custom_policies"></a> [asg\_custom\_policies](#input\_asg\_custom\_policies) | Map of autoscaling policies to create for the service | `any` | <pre>{<br>  "cpu": {<br>    "target_tracking_scaling_policy_configuration": {<br>      "predefined_metric_specification": {<br>        "predefined_metric_type": "ECSServiceAverageCPUUtilization"<br>      }<br>    }<br>  },<br>  "memory": {<br>    "target_tracking_scaling_policy_configuration": {<br>      "predefined_metric_specification": {<br>        "predefined_metric_type": "ECSServiceAverageMemoryUtilization"<br>      }<br>    }<br>  }<br>}</pre> | no |
 | <a name="input_asg_evaluation_periods"></a> [asg\_evaluation\_periods](#input\_asg\_evaluation\_periods) | The number of periods over which data is compared to the specified threshold. | `number` | `5` | no |
 | <a name="input_asg_max_tasks"></a> [asg\_max\_tasks](#input\_asg\_max\_tasks) | The amount of maximum tasks | `number` | `3` | no |
 | <a name="input_asg_min_tasks"></a> [asg\_min\_tasks](#input\_asg\_min\_tasks) | The amount of minimum tasks | `number` | `1` | no |
