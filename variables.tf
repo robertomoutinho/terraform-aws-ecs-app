@@ -406,9 +406,11 @@ variable "ecs_efs_volumes" {
     efs_volume_configuration = object({
       file_system_id = string
       root_directory = string
+      transit_encryption_port = optional(number, 2999)
     })
     authorization_config = object({
       access_point_id = string
+      iam = optional(string, "DISABLED")
     })
   }))
   default = []

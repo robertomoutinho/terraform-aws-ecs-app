@@ -139,7 +139,7 @@ module "container_definition" {
         valueFrom = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment}/shared/datadog/api_key"
       }
     ]
-    } : {
+  } : {
     logDriver = "awslogs"
     options = {
       awslogs-region        = data.aws_region.current.name
@@ -199,9 +199,10 @@ resource "aws_ecs_task_definition" "app" {
         file_system_id          = volume.value["efs_volume_configuration"]["file_system_id"]
         root_directory          = volume.value["efs_volume_configuration"]["root_directory"]
         transit_encryption      = "ENABLED"
-        transit_encryption_port = 2999
+        transit_encryption_port = lookup(volume.value["efs_volume_configuration"], "transit_encryption_port", 2999)
         authorization_config {
           access_point_id = volume.value["authorization_config"]["access_point_id"]
+          iam             = lookup(volume.value["authorization_config"], "iam", "DISABLED")
         }
       }
     }
