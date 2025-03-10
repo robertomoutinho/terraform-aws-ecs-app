@@ -83,7 +83,7 @@ resource "aws_security_group_rule" "ingress_with_alb_https_security_group_id" {
   for_each                 = { for name, config in var.app_port_mapping : name => config if var.enable_alb }
   security_group_id        = aws_security_group.app.id
   type                     = "ingress"
-  source_security_group_id = module.alb_https_sg.this_security_group_id
+  source_security_group_id = module.alb_https_sg.this_security_group_id[0]
   description              = "ALB HTTPS"
   from_port                = each.value.hostPort
   to_port                  = each.value.hostPort
@@ -94,7 +94,7 @@ resource "aws_security_group_rule" "ingress_with_alb_http_security_group_id" {
   for_each                 = { for name, config in var.app_port_mapping : name => config if var.enable_alb }
   security_group_id        = aws_security_group.app.id
   type                     = "ingress"
-  source_security_group_id = module.alb_http_sg.this_security_group_id
+  source_security_group_id = module.alb_http_sg.this_security_group_id[0]
   description              = "ALB HTTP"
   from_port                = each.value.hostPort
   to_port                  = each.value.hostPort
