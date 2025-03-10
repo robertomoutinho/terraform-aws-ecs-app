@@ -8,6 +8,7 @@ data "aws_vpc" "selected" {
 
 module "alb_https_sg" {
 
+  count   = var.enable_alb ? 1 : 0
   source  = "terraform-aws-modules/security-group/aws"
   version = "v3.18.0"
 
@@ -28,6 +29,7 @@ module "alb_https_sg" {
 
 module "alb_http_sg" {
 
+  count   = var.enable_alb ? 1 : 0
   source  = "terraform-aws-modules/security-group/aws"
   version = "v3.18.0"
 
